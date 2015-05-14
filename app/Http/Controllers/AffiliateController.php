@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Affiliate;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,9 @@ class AffiliateController extends Controller {
 	 */
 	public function index()
 	{
-		//
+        $affiliates = Affiliate::all();
+
+        return view('affiliates.index', compact('affiliates'));
 	}
 
 	/**

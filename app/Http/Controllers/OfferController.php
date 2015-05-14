@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Offer;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller {
@@ -14,7 +15,8 @@ class OfferController extends Controller {
 	 */
 	public function index()
 	{
-		//
+        $offers = Offer::all();
+        return view('offers.index', compact('offers'));
 	}
 
 	/**
