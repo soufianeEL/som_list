@@ -23,6 +23,7 @@ class CreateCreativesTable extends Migration {
             $table->integer('offer_id')->unsigned();
 
             $table->timestamps();
+            $table->softDeletes();
 		});
 
         Schema::table('creatives', function(Blueprint $table) {

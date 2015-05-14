@@ -3,81 +3,48 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Offer;
+use App\Models\Offer;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller {
 
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return Response
-	 */
+    protected $rules = [
+        'name' => ['required', 'min:3'],
+        'code' => ['required'],
+    ];
+
+
 	public function index()
 	{
         $offers = Offer::all();
         return view('offers.index', compact('offers'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
+    public function show(Offer $offer)
+    {
+        return view('offers.show', compact('offer'));
+    }
+
 	public function create()
 	{
-		//
+		return view('offers.create');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+    public function edit(Offer $offer)
+    {
+        return view('offers.edit',compact('offer'));
+    }
+
+    public function store()
 	{
 		//
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
 	public function update($id)
 	{
 		//
 	}
 
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
 	public function destroy($id)
 	{
 		//

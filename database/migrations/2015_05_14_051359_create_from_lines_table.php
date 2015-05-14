@@ -20,6 +20,7 @@ class CreateFromLinesTable extends Migration {
             $table->integer('offer_id')->unsigned();
 
             $table->timestamps();
+            $table->softDeletes();
 		});
 
         Schema::table('from_lines', function(Blueprint $table) {

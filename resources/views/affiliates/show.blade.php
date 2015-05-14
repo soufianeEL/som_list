@@ -21,7 +21,6 @@
             </thead>
             <tbody>
             @foreach( $affiliate->offers as $offer )
-                <li>
                     <tr>
                         <td>{{ $offer->id }}</td>
                         <td>{{ $offer->name }}</td>
@@ -31,7 +30,6 @@
 
                         <!-- we will also add show, edit, and delete buttons -->
                         <td>
-
                             <!-- show the affiliate (uses the show method found at GET /affiliate/{id} -->
                             <a class="btn btn-small btn-success" href="{{ URL::to('offers/' . $offer->id) }}">Show</a>
 
@@ -40,17 +38,15 @@
 
                             <!-- delete the affiliate (uses the destroy method DESTROY /affiliate/{id} -->
                             <a class="btn btn-small btn-warning" href="#">Delete</a>
-
                         </td>
                     </tr>
-                </li>
             @endforeach
             </tbody>
         </table>
     @endif
 
     <p>
-        {!! link_to_route('affiliates.index', 'Back to affiliates') !!} |
+        <a class="btn btn-info" href="{{ URL::route('affiliates.index') }}">Back to affiliates</a>
         {!! link_to_route('offers.create', 'Create offer', $affiliate) !!}
     </p>
 @endsection

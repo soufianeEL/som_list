@@ -2,7 +2,7 @@
 
 
 use Illuminate\Database\Seeder;
-use App\Subject;use App\FromLine; use App\Creative;
+use App\Models\Subject;use App\Models\FromLine; use App\Models\Creative;
 
 class ChildOfferTableSeeder extends Seeder {
 

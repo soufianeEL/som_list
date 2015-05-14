@@ -21,8 +21,8 @@ Route::controllers([
 ]);
 
 // Provide controller methods with object instead of ID
-Route::model('affiliates', 'App\Affiliate');
-Route::model('offers', 'App\Offer');
+Route::model('affiliates', 'App\Models\Affiliate');
+Route::model('offers', 'App\Models\Offer');
 
 //
 Route::resource('affiliates','AffiliateController');

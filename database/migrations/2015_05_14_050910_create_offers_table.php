@@ -28,6 +28,7 @@ class CreateOffersTable extends Migration {
             $table->integer('affiliate_id')->unsigned();
 
             $table->timestamps();
+            $table->softDeletes();
 		});
 
         Schema::table('offers', function(Blueprint $table) {
