@@ -21,15 +21,15 @@ class Offer extends Model {
      */
     public function subjects()
     {
-        return $this->hasMany('App\Models\Subject');
+        return $this->hasMany('App\Subject');
     }
     public function fromLines()
     {
-        return $this->hasMany('App\Models\FromLine');
+        return $this->hasMany('App\FromLine');
     }
     public function creatives()
     {
-        return $this->hasMany('App\Models\Creative');
+        return $this->hasMany('App\Creative');
     }
 
 }
