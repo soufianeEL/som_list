@@ -22,6 +22,7 @@ class CreateAffiliatesTable extends Migration {
             $table->string('status',20);
 
             $table->timestamps();
+            $table->softDeletes();
 		});
 	}
 

@@ -1,12 +1,20 @@
 <?php namespace App\Http\Controllers;
 
+
 use App\Affiliate;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Support\Facades\Redirect;
+use Input;
 use Illuminate\Http\Request;
 
 class AffiliateController extends Controller {
+
+    protected $rules = [
+        'name' => ['required', 'min:3'],
+        'code' => ['required'],
+    ];
 
 	/**
 	 * Display a listing of the resource.
@@ -16,72 +24,49 @@ class AffiliateController extends Controller {
 	public function index()
 	{
         $affiliates = Affiliate::all();
-
         return view('affiliates.index', compact('affiliates'));
 	}
 
-	/**
-	 * Show the form for creating a new resource.
-	 *
-	 * @return Response
-	 */
 	public function create()
 	{
-		//
+		return view('affiliates.create');
 	}
 
-	/**
-	 * Store a newly created resource in storage.
-	 *
-	 * @return Response
-	 */
-	public function store()
+    public function edit(Affiliate $affiliate)
+    {
+        //$affiliate = Affiliate::find($id);
+        return view('affiliates.edit',compact('affiliate'));
+    }
+
+
+    public function store(Request $request)
 	{
-		//
+        $this->validate($request, $this->rules);
+
+        $input = Input::all();
+        Affiliate::create( $input );
+
+        return Redirect::route('affiliates.index')->with('message', 'Affiliate created');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
+
+    public function update(Affiliate $affiliate, Request $request)
+    {
+        $this->validate($request, $this->rules);
+        $input = array_except(Input::all(),'_method');
+        $affiliate->update($input);
+        // faut faire aff.show au lieu aff.index
+        return Redirect::route('affiliates.index')->with('message', 'Affiliate updated.');
+    }
+
+	public function destroy(Affiliate $affiliate)
 	{
-		//
+        $affiliate->delete();
+        return Redirect::route('affiliates.index')->with('message', 'Affiliate deleted.');
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		//
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		//
-	}
-
+    public function show(Affiliate $affiliate)
+    {
+        return view('affiliates.show', compact('affiliate'));
+    }
 }

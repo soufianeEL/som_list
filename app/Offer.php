@@ -4,6 +4,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Offer extends Model {
 
+    protected $guarded = [];
+
     /**
      * One to Many relation
      *

@@ -20,6 +20,10 @@ Route::controllers([
 	'password' => 'Auth\PasswordController',
 ]);
 
+// Provide controller methods with object instead of ID
+Route::model('affiliates', 'App\Affiliate');
+Route::model('offers', 'App\Offer');
+
 //
 Route::resource('affiliates','AffiliateController');
 Route::resource('offers','OfferController');

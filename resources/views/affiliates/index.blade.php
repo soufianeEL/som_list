@@ -30,7 +30,7 @@
 
                     <!-- we will also add show, edit, and delete buttons -->
                     <td>
-
+                        {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('affiliates.destroy', $aff))) !!}
                         <!-- show the affiliate (uses the show method found at GET /affiliate/{id} -->
                         <a class="btn btn-small btn-success" href="{{ URL::to('affiliates/' . $aff->id) }}">Show</a>
 
@@ -38,7 +38,8 @@
                         <a class="btn btn-small btn-info" href="{{ URL::to('affiliates/' . $aff->id . '/edit') }}">Edit</a>
 
                         <!-- delete the affiliate (uses the destroy method DESTROY /affiliate/{id} -->
-                        <a class="btn btn-small btn-warning" href="#">Delete</a>
+                        {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
+                        {!! Form::close() !!}
 
                     </td>
                 </tr>
@@ -47,5 +48,7 @@
             </tbody>
         </table>
     @endif
-
+    <p>
+        <a class="btn btn-info" href="{{ URL::route('affiliates.create') }}">Create Affiliate</a>
+    </p>
 @endsection
