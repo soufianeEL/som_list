@@ -18,4 +18,5 @@ class Subject extends Model {
         return $this->belongsTo('App\Models\Offer');
     }
 
+
 }

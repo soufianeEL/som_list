@@ -21,8 +21,8 @@ class CreateServersTable extends Migration {
             $table->string('provider',20);
             $table->string('status',20);
             $table->boolean('active')->default(true);
-            $table->date('add_date');
-            $table->date('return_date');
+            $table->dateTime('add_date');
+            $table->dateTime('return_date');
 
             $table->timestamps();
             $table->softDeletes();
