@@ -10,6 +10,11 @@ use Illuminate\Http\Request;
 
 class CreativeController extends Controller {
 
+    protected $rules = [
+        'name' => ['required', 'min:3'],
+        'image' => ['required','mimes:jpeg,bmp,png'],
+    ];
+
 	public function index()
 	{
 		//
@@ -37,11 +42,22 @@ class CreativeController extends Controller {
         return Redirect::route('offers.show', $offer)->with('message','Offer updated (subject created)');
 	}
 
-	public function update(Offer $offer, Creative $creative)
+	public function update(Offer $offer, Creative $creative, Request $request)
 	{
-        $input = array_except(Input::all(), '_method');
-        $creative->update($input);
+        $this->validate($request, $this->rules);
 
+        $file = Input::file('image');
+        $extension = $file->getClientOriginalExtension();
+        $fileName = $creative->id . '.' . $extension;
+//        if (Input::hasFile('image')) { echo "ok"; }
+//        else{ echo 'not ok ';}
+        $input = array_except(Input::all(), '_method');
+        $input['image'] = $fileName;
+        $destinationPath = base_path() . '/public/creatives/'. $offer->id .'/' ;
+        Input::file('image')->move($destinationPath , $fileName );
+
+        $creative->update($input);
+        //Session::flash('success', 'Upload successfully');
         return Redirect::route('offers.show', $offer)->with('message','Offer updated (creative updated)');
 	}
 

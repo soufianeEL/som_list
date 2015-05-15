@@ -50,5 +50,7 @@
             </tbody>
         </table>
     @endif
-
+    <p>
+        <a class="btn btn-info" href="{{ URL::route('offers.create') }}">Create Offer</a>
+    </p>
 @endsection

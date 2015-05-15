@@ -22,6 +22,7 @@ Route::controllers([
 
 // Provide controller methods with object instead of ID
 Route::model('affiliates', 'App\Models\Affiliate');
+//Route::post('apply/upload', 'ApplyController@upload');
 Route::model('offers', 'App\Models\Offer');
 Route::model('creatives', 'App\Models\Creative');
 Route::model('subjects', 'App\Models\Subject');

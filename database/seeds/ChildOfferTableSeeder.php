@@ -19,7 +19,7 @@ class ChildOfferTableSeeder extends Seeder {
 
             for($i =1; $i < 3; $i++){
                 Creative::create([
-                    'name' => 'subject '.$i ,
+                    'name' => 'creative '.$i ,
                     'unique_link' => 'www.crea-'.$i.'.jpg' ,
                     'offer_id' => $j
                 ]);

@@ -8,7 +8,7 @@
     <h4><b>Price Format:</b>  {{ $offer->price_format }}</h4>
     <h4><b>Price Range:</b>   {{ $offer->price_range }}</h4>
 
-    <h3> Subjects </h3>
+    <h3> Subjects | {!! link_to_route('offers.subjects.create', 'Create subject', $offer) !!}</h3>
     @if ( !$offer->subjects->count() )
         Your offer has no subjects.
     @else
@@ -39,11 +39,8 @@
             @endforeach
             </tbody>
         </table>
-        <p>
-            {!! link_to_route('offers.subjects.create', 'Create subject', $offer) !!}
-        </p>
     @endif
-    <h3> Creatives </h3>
+    <h3> <b>Creatives</b> | {!! link_to_route('offers.creatives.create', 'Create Creative', $offer) !!}</h3>
     @if ( !$offer->creatives->count() )
         Your offer has no creatives.
     @else
@@ -74,11 +71,9 @@
             @endforeach
             </tbody>
         </table>
-        <p>
-            {!! link_to_route('offers.creatives.create', 'Create Creative', $offer) !!}
-        </p>
     @endif
-    <h3> From Lines </h3>
+
+    <h3> From Lines | {!! link_to_route('offers.from_lines.create', 'Create fromLine', $offer) !!}</h3>
     @if ( !$offer->fromLines->count() )
         Your offer has no From Lines.
     @else
@@ -109,9 +104,6 @@
             @endforeach
             </tbody>
         </table>
-        <p>
-            {!! link_to_route('offers.from_lines.create', 'Create fromLine', $offer) !!}
-        </p>
     @endif
 
     <p>
