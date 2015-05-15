@@ -26,7 +26,7 @@
                     <td>{{ $aff->name }}</td>
                     <td>{{ $aff->code }}</td>
                     <td>{{ $aff->link }}</td>
-                    <td>offers</td>
+                    <td>offers (lien ici) </td>
 
                     <!-- we will also add show, edit, and delete buttons -->
                     <td>

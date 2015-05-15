@@ -29,20 +29,18 @@
                         <td></td>
 
                         <td>
-
-                            <a class="btn btn-small btn-success" href="{{ URL::to('$subjects/' . $subject->id) }}">Show</a>
-
-                            <a class="btn btn-small btn-info" href="{{ URL::to('$subjects/' . $subject->id . '/edit') }}">Edit</a>
-
-                            <a class="btn btn-small btn-warning" href="#">Delete</a>
-
+                            {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('offers.subjects.destroy', $offer, $subject))) !!}
+                            <a class="btn btn-small btn-success" href="{{$offer->id}}/subjects/{{$subject->id}}">Show</a>
+                            <a class="btn btn-small btn-info" href="{{$offer->id}}/subjects/{{$subject->id}}/edit">Edit</a>
+                            {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
+                            {!! Form::close() !!}
                         </td>
                     </tr>
             @endforeach
             </tbody>
         </table>
         <p>
-            {!! link_to_route('offers.create', 'Create offer', $offer) !!}
+            {!! link_to_route('offers.subjects.create', 'Create subject', $offer) !!}
         </p>
     @endif
     <h3> Creatives </h3>
@@ -66,20 +64,18 @@
                     <td>{{ $creative->unique_link }}</td>
 
                     <td>
-
-                        <a class="btn btn-small btn-success" href="{{ URL::to('$subjects/' . $subject->id) }}">Show</a>
-
-                        <a class="btn btn-small btn-info" href="{{ URL::to('$subjects/' . $subject->id . '/edit') }}">Edit</a>
-
-                        <a class="btn btn-small btn-warning" href="#">Delete</a>
-
+                        {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('offers.creatives.destroy', $offer, $creative))) !!}
+                        <a class="btn btn-small btn-success" href="{{$offer->id}}/creatives/{{$creative->id}}">Show</a>
+                        <a class="btn btn-small btn-info" href="{{$offer->id}}/creatives/{{$creative->id}}/edit">Edit</a>
+                        {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
+                        {!! Form::close() !!}
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
         <p>
-            {!! link_to_route('offers.create', 'Create offer', $offer) !!}
+            {!! link_to_route('offers.creatives.create', 'Create Creative', $offer) !!}
         </p>
     @endif
     <h3> From Lines </h3>
@@ -114,7 +110,7 @@
             </tbody>
         </table>
         <p>
-            {!! link_to_route('offers.create', 'Create offer', $offer) !!}
+            {!! link_to_route('offers.from_lines.create', 'Create fromLine', $offer) !!}
         </p>
     @endif
 

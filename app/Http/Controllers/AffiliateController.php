@@ -26,6 +26,12 @@ class AffiliateController extends Controller {
         return view('affiliates.index', compact('affiliates'));
 	}
 
+    public function getOffers(Affiliate $affiliate){
+
+        $offers = $affiliate->offers();
+        return view('offers.index', compact('offers'));
+    }
+
 	public function create()
 	{
 		return view('affiliates.create');

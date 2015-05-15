@@ -2,9 +2,10 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Input;
 use App\Models\Offer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class OfferController extends Controller {
 
@@ -35,19 +36,31 @@ class OfferController extends Controller {
         return view('offers.edit',compact('offer'));
     }
 
-    public function store()
+    public function store(Request $request)
 	{
-		//
+        $this->validate($request, $this->rules);
+
+        $input = Input::all();
+        Offer::create($input);
+
+        return Redirect::route('offers.index')->with('message','Offer created');
 	}
 
-	public function update($id)
+	public function update(Offer $offer,Request $request)
 	{
-		//
+		$this->validate($request, $this->rules);
+        $input = array_except(Input::all(),'_method');
+        $offer->update($input);
+
+        return Redirect::route('offers.show', $offer)->with('message','Offer updated');
+
+
 	}
 
-	public function destroy($id)
+	public function destroy(Offer $offer)
 	{
-		//
+		$offer->delete();
+        return Redirect::route('offers.index')->with('message','Offer deleted');
 	}
 
 }
