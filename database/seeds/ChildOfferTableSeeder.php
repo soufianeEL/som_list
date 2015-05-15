@@ -34,10 +34,6 @@ class ChildOfferTableSeeder extends Seeder {
 
         }
 
-
-
-
-
     }
 
 }

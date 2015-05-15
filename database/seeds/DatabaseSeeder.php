@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder {
         $this->call('AffiliateTableSeeder');
         $this->call('OfferTableSeeder');
         $this->call('ChildOfferTableSeeder');
+        $this->call('ServerIpTableSeeder');
 
 	}
 
