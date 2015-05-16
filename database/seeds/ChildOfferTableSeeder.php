@@ -17,7 +17,7 @@ class ChildOfferTableSeeder extends Seeder {
                 ]);
             }
 
-            for($i =1; $i < 3; $i++){
+            for($i =1; $i < 4; $i++){
                 Creative::create([
                     'name' => 'creative '.$i ,
                     'unique_link' => 'www.crea-'.$i.'.jpg' ,
@@ -33,6 +33,7 @@ class ChildOfferTableSeeder extends Seeder {
             }
 
         }
+
 
     }
 

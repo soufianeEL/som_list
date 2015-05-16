@@ -14,4 +14,10 @@ class Ip extends BaseModel {
         return $this->belongsTo('App\Models\Server');
     }
 
+    public function campaigns()
+    {
+        return $this->belongsToMany('App\Models\Campaign');
+    }
+
+
 }

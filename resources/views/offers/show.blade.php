@@ -74,7 +74,7 @@
     @endif
 
     <h3> From Lines | {!! link_to_route('offers.from_lines.create', 'Create fromLine', $offer) !!}</h3>
-    @if ( !$offer->fromLines->count() )
+    @if ( !$offer->from_lines->count() )
         Your offer has no From Lines.
     @else
         <table class="table table-striped table-bordered">
@@ -86,7 +86,7 @@
             </tr>
             </thead>
             <tbody>
-            @foreach( $offer->fromLines as $fromLine )
+            @foreach( $offer->from_lines as $fromLine )
                 <tr>
                     <td>{{ $fromLine->id }}</td>
                     <td>{{ $fromLine->from }}</td>

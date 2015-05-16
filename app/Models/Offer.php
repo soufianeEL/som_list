@@ -20,13 +20,18 @@ class Offer extends BaseModel {
     {
         return $this->hasMany('App\Models\Subject');
     }
-    public function FromLines()
+    public function from_lines()
     {
         return $this->hasMany('App\Models\FromLine');
     }
     public function creatives()
     {
         return $this->hasMany('App\Models\Creative');
+    }
+
+    public function prepared_offers()
+    {
+        return $this->hasMany('App\Models\PreparedOffer');
     }
 
 }
