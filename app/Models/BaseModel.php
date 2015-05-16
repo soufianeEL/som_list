@@ -16,17 +16,17 @@ class BaseModel extends Model{
 
         static::creating(function($model)
         {
-            $model->created_by = User::all()->count();
-            $model->updated_by = User::all()->count();
+            $model->created_by = Auth::user()->id;
+            $model->updated_by = Auth::user()->id;
         });
         static::updating(function($model)
         {
-            $model->updated_by = User::all()->count();
+            $model->updated_by = Auth::user()->id;
         });
 
         static::deleting(function($model)
         {
-            //$model->updated_by = Auth::user()->count();
+            $model->updated_by = Auth::user()->id;
             $model->save();
         });
     }
