@@ -1,12 +1,8 @@
-<?php namespace App\models;
+<?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Affiliate extends Model {
-
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
+class Affiliate extends BaseModel {
 
     protected $guarded = [];
 
@@ -17,6 +13,5 @@ class Affiliate extends Model {
     {
         return $this->hasMany('App\Models\Offer');
     }
-
 
 }

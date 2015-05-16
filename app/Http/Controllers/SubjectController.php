@@ -3,7 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Models\Subject;
+use App\models\Subject;
 use Illuminate\Support\Facades\Redirect;
 use Input;
 use App\Models\Offer;
@@ -44,7 +44,6 @@ class SubjectController extends Controller {
 	{
         $input = array_except(Input::all(), '_method');
         $subject->update($input);
-
 
         return Redirect::route('offers.show', $offer)->with('message','Offer updated (subject updated)');
 	}

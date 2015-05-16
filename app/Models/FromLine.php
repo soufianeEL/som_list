@@ -1,12 +1,9 @@
-<?php namespace App\models;
+<?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FromLine extends Model {
-
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
+class FromLine extends BaseModel {
 
     protected $guarded = [];
 

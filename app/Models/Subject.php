@@ -1,14 +1,15 @@
-<?php namespace App\models;
+<?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Subject extends Model {
-
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
+class Subject extends BaseModel {
 
     protected $guarded = [];
+
+    public static function boot()
+    {
+        parent::boot();
+    }
 
     /**
      * One to Many relation
@@ -17,6 +18,5 @@ class Subject extends Model {
     {
         return $this->belongsTo('App\Models\Offer');
     }
-
 
 }

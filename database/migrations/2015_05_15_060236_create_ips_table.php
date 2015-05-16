@@ -22,6 +22,9 @@ class CreateIpsTable extends Migration {
             $table->boolean('active')->default(true);
             $table->integer('server_id')->unsigned();
 
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned();
+
             $table->timestamps();
             $table->softDeletes();
 		});

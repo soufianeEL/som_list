@@ -22,6 +22,9 @@ class CreateCreativesTable extends Migration {
             $table->string('image',100);
             $table->integer('offer_id')->unsigned();
 
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned();
+
             $table->timestamps();
             $table->softDeletes();
 		});

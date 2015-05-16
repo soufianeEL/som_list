@@ -27,6 +27,9 @@ class CreateOffersTable extends Migration {
             $table->boolean('active')->default(true);
             $table->integer('affiliate_id')->unsigned();
 
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned();
+
             $table->timestamps();
             $table->softDeletes();
 		});

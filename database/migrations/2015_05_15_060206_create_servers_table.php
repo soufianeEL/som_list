@@ -24,6 +24,9 @@ class CreateServersTable extends Migration {
             $table->dateTime('add_date');
             $table->dateTime('return_date');
 
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned();
+
             $table->timestamps();
             $table->softDeletes();
 		});

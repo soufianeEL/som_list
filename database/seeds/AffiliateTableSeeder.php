@@ -22,7 +22,11 @@ class AffiliateTableSeeder extends Seeder {
             ['name' => 'aff 3', 'code' => '30','link' => 'www.aff_3','status' => 'inactive', 'created_at' => new DateTime, 'updated_at' => new DateTime],
         );
 
-        DB::table('affiliates')->insert($affiliates);
+        //DB::table('affiliates')->insert($affiliates);
+
+        foreach ( $affiliates as $affiliate ){
+            \App\Models\Affiliate::create($affiliate);
+        }
     }
 
 }

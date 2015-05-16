@@ -21,6 +21,9 @@ class CreateAffiliatesTable extends Migration {
             $table->string('link',100);
             $table->string('status',20);
 
+            $table->integer('created_by')->unsigned();
+            $table->integer('updated_by')->unsigned();
+
             $table->timestamps();
             $table->softDeletes();
 		});
