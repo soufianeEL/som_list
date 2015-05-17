@@ -33,13 +33,12 @@
 
                     <td><a class="glyphicon glyphicon-eject" href="{{ URL::to('servers/' . $ip->server_id ) }}"> {{ $ip->server->name }} </a> </td>
                     <td>
-                        {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('ips.destroy', $ip))) !!}
 
-                        <a class="btn btn-small btn-success" href="{{ URL::to('ips/' . $ip->id) }}"><i class="glyphicon glyphicon-info-sign"></i> Show</a>
-                        <a class="btn btn-small btn-info" href="{{ URL::to('ips/' . $ip->id . '/edit') }}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                        <a class="btn btn-small btn-success" href="#"><i class="glyphicon glyphicon-info-sign"></i> Show</a>
+                        <a class="btn btn-small btn-info" href="#"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                        <a class="btn btn-small btn-danger" href="#">delete</a>
 
-                        {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
-                        {!! Form::close() !!}
+
                     </td>
                 </tr>
             @endforeach

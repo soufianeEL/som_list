@@ -23,7 +23,7 @@
 
             @foreach($offers as $offer)
                 <tr>
-                    <td>{{ $offer->id }}</td>
+                    <td><a href="{{ URL::to('offers/'.$offer->id.'/prepare/') }}">{{ $offer->id }}</a></td>
                     <td>{{ $offer->name }}</td>
                     <td>{{ $offer->description }}</td>
                     <td>{{ $offer->code }}</td>

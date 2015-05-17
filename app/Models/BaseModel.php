@@ -18,9 +18,14 @@ class BaseModel extends Model{
         static::creating(function($model)
         {
             $tmp = Auth::user();
-            $id_user = ( $tmp ? $tmp->id : 0);
-            $model->created_by = $id_user;
-            $model->updated_by = $id_user;
+            if($tmp){
+                $model->created_by = $tmp->id;
+                $model->updated_by = $tmp->id;
+            }
+            else{
+                $model->created_by = 1;
+            }
+
         });
         static::updating(function($model)
         {

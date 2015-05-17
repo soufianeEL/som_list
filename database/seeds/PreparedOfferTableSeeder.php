@@ -18,7 +18,8 @@ class PreparedOfferTableSeeder extends Seeder {
                 'offer_id' => $j ,
                 'subject_id' => $tmp[$tmp2],
                 'creative_id' => $tmp[$tmp2],
-                'from_line_id' => $tmp[$tmp2]
+                'from_line_id' => $tmp[$tmp2],
+//                'created_by' => 1
             ]);
         }
 
@@ -27,7 +28,8 @@ class PreparedOfferTableSeeder extends Seeder {
                 'name' => 'Campaign-'.$j ,
                 'status' => 'draft',
                 'type' => 'simple',
-                'prepared_offer_id' => $j
+                'prepared_offer_id' => $j,
+//                'created_by' => 1
             ]);
         }
 

@@ -7,9 +7,17 @@
 	<title>Laravel</title>
 
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
+    <!-- main stylesheet -->
+    <link href="{{ asset('/css/main.min.css') }}" rel="stylesheet" media="screen" id="mainCss">
+    <!-- elusive icons -->
+    <link href="{{ asset('/icons/elusive/css/elusive-webfont.css') }}" rel="stylesheet" media="screen">
+    <!-- elegant icons -->
+    <link href="{{ asset('/icons/elegant/style.css') }}" rel="stylesheet" media="screen">
+    <!-- scrollbar -->
+    <link rel="stylesheet" href="{{ asset('/lib/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css')}}">
 
 	<!-- Fonts -->
-	<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+	<link href='{{ asset('/fonts/googleapis.css') }}' rel='stylesheet' type='text/css'>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,59 +26,51 @@
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
-<body>
-	<nav class="navbar navbar-default">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-					<span class="sr-only">Toggle Navigation</span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#">Laravel</a>
-			</div>
+<body class="side_menu_active side_menu_expanded">
+    <div id="page_wrapper">
+        <!-- header -->
+        <header id="main_header">
+            @include('_main_header')
+        </header>
+        <!-- breadcrumbs -->
+        <nav id="breadcrumbs">
+            <ul>
+                <li><a href="dashboard.html">Home</a></li>
+            </ul>
+        </nav>
+        <!-- main content -->
+        <div id="main_wrapper">
 
-			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li><a href="{{ url('/') }}">Home</a></li>
-				</ul>
+            @if (Session::has('message'))
+                <div class="flash alert-info">
+                    <p>{{ Session::get('message') }}</p>
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class='flash alert-danger'>
+                    @foreach ( $errors->all() as $error )
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
 
-				<ul class="nav navbar-nav navbar-right">
-					@if (Auth::guest())
-						<li><a href="{{ url('/auth/login') }}">Login</a></li>
-						<li><a href="{{ url('/auth/register') }}">Register</a></li>
-					@else
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
-							<ul class="dropdown-menu" role="menu">
-								<li><a href="{{ url('/auth/logout') }}">Logout</a></li>
-							</ul>
-						</li>
-					@endif
-				</ul>
-			</div>
-		</div>
-	</nav>
+            @yield('content')
 
-    <div class="content">
-        @if (Session::has('message'))
-            <div class="flash alert-info">
-                <p>{{ Session::get('message') }}</p>
-            </div>
-        @endif
-        @if ($errors->any())
-            <div class='flash alert-danger'>
-                @foreach ( $errors->all() as $error )
-                    <p>{{ $error }}</p>
-                @endforeach
-            </div>
-        @endif
+        </div>
 
-        @yield('content')
+        <!-- main menu -->
+        @include('_main_menu')
     </div>
 
-	<!-- Scripts -->
+    <!-- fastclick -->
+    <script src="{{ asset('/js/fastclick.min.js') }}"></script>
+    <!-- typeahead -->
+    <script src="{{ asset('/lib/typeahead/typeahead.bundle.min.js') }}"></script>
+    <!-- scrollbar -->
+    <script src="{{ asset('/lib/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js') }}"></script>
+    <!-- Scripts -->
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <!-- Yukon Admin functions -->
+    <script src="{{ asset('/js/yukon_all.min.js') }}"></script>
 </body>
 </html>
