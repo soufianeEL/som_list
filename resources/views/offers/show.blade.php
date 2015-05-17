@@ -93,9 +93,9 @@
 
                     <td>
 
-                        <a class="btn btn-small btn-success" href="{{ URL::to('$fromLine/' . $fromLine->id) }}">Show</a>
+                        <a class="btn btn-small btn-success" href="{{ URL::to('/from_lines/' . $fromLine->id) }}">Show</a>
 
-                        <a class="btn btn-small btn-info" href="{{ URL::to('$fromLine/' . $fromLine->id . '/edit') }}">Edit</a>
+                        <a class="btn btn-small btn-info" href="{{ URL::to('offers/'.$offer->id.'/from_lines/' . $fromLine->id . '/edit') }}">Edit</a>
 
                         <a class="btn btn-small btn-warning" href="#">Delete</a>
 

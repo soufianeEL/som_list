@@ -30,11 +30,14 @@ Route::model('subjects', 'App\Models\Subject');
 Route::model('servers', 'App\Models\Server');
 Route::model('ips', 'App\Models\Ip');
 
+Route::model('campaigns', 'App\Models\Campaign');
+Route::model('prepared_offers', 'App\Models\PreparedOffer');
+
 
 //
 Route::resource('affiliates','AffiliateController');
 Route::resource('offers','OfferController');
-Route::get('offers/{offers}/prepare',['as' => 'offers.prepare','uses' => 'OfferController@prepare']);
+Route::get('offers/{offers}/prepare',['as' => 'offers.prepare','uses' => 'PreparedOfferController@create']);
 Route::resource('offers.subjects','SubjectController');
 Route::resource('offers.creatives','CreativeController');
 Route::resource('offers.from_lines','FromLineController');
@@ -45,7 +48,7 @@ Route::get('ips',['as' => 'ips.index','uses' => 'IpController@index']);
 //Route::resource('ips','IpController');
 
 Route::resource('prepared-offers','PreparedOfferController');
-Route::get('campaigns/start',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
+Route::get('campaigns/start/{prepared_offers}',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
 Route::resource('campaigns','CampaignController');
 
 //not get

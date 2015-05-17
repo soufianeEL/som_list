@@ -10,7 +10,7 @@
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
-                <td>ID</td>
+                <td>Prepare</td>
                 <td>Name</td>
                 <td>Description</td>
                 <td>Code</td>
@@ -23,7 +23,7 @@
 
             @foreach($offers as $offer)
                 <tr>
-                    <td><a href="{{ URL::to('offers/'.$offer->id.'/prepare/') }}">{{ $offer->id }}</a></td>
+                    <td><a class="el-icon-th-large bs_ttip" title="Prepare It" href="{{ URL::to('offers/'.$offer->id.'/prepare/') }}"></a></td>
                     <td>{{ $offer->name }}</td>
                     <td>{{ $offer->description }}</td>
                     <td>{{ $offer->code }}</td>

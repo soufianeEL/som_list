@@ -21,6 +21,12 @@ class DatabaseSeeder extends Seeder {
             'password' => Hash::make('admin')
         ]);
 
+        User::create([
+            'name' => 'soufiane2',
+            'email' => 'soufianeelhamchi@hotmail.com',
+            'password' => Hash::make('user')
+        ]);
+
         // $this->call('UserTableSeeder');
         $this->call('AffiliateTableSeeder');
         $this->call('OfferTableSeeder');

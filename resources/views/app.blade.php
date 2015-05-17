@@ -15,7 +15,7 @@
     <link href="{{ asset('/icons/elegant/style.css') }}" rel="stylesheet" media="screen">
     <!-- scrollbar -->
     <link rel="stylesheet" href="{{ asset('/lib/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.css')}}">
-
+    @yield('head')
 	<!-- Fonts -->
 	<link href='{{ asset('/fonts/googleapis.css') }}' rel='stylesheet' type='text/css'>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -72,5 +72,6 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <!-- Yukon Admin functions -->
     <script src="{{ asset('/js/yukon_all.min.js') }}"></script>
+    @yield('js')
 </body>
 </html>

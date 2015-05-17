@@ -26,10 +26,10 @@ class OfferController extends Controller {
         return view('offers.show', compact('offer'));
     }
 
-    public function prepare(Offer $offer)
+    /*public function prepare(Offer $offer)
     {
         return view('offers.prepare', compact('offer'));
-    }
+    }*/
 
 	public function create()
 	{
