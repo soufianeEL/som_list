@@ -1,16 +1,19 @@
 <?php namespace App\Http\Controllers;
 
+use App\Commands\SendCampaign;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Campaign;
 use App\Models\Creative;
 use App\Models\FromLine;
+use App\Models\Ip;
 use App\Models\PreparedOffer;
 use App\Models\Server;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Queue;
 
 class CampaignController extends Controller {
 
@@ -31,13 +34,34 @@ class CampaignController extends Controller {
             'creative' => Creative::find($prepared_offer->creative_id)->name
         ];
         $servers = Server::where('active', 1)->get();
-        //dd($servers[0]->ips);
-        return view('campaigns.start', compact('var'));
+        //$ips = Ip::where('server_id', 3)->get(array('id','ip'));;
+        $select = array();
+        foreach( $servers as $server){
+            foreach($server->ips as $ip){
+                $select[$server->name][$ip->id] = $ip->ip;
+            }
+        }
+
+        return view('campaigns.start', compact('var','select'));
     }
 
 	public function create()
 	{
+        $vmta = "0,1,2,3";
+        $msg_vmta = 3;
+        $msg_conn = 1000;
+        $from = 'test@email';
+        //$to = $_POST["to"];
+        $subject = "subject";
+        $headers = "Content-Type: text/plain;";
+        $message = "laravel app
+                    my msg heeeeeeeere
+                    dispatch - data.txt.save";
 
+        //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
+        $this->dispatch(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
+
+        echo 'ook';
 	}
 
 
@@ -47,10 +71,12 @@ class CampaignController extends Controller {
 
         $campaign = new Campaign();
         $campaign->name = $input["offre"] . '-' . $input["list"];
-        $campaign->status = 'just created';
+        $campaign->status = 'trashed';
         $campaign->prepared_offer_id = $input["prepared_offer_id"];
 
         $campaign->save();
+        $campaign->ips()->sync($input['vmta']);
+
         echo "saved oook";
 	}
 

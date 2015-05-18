@@ -11,18 +11,16 @@
 
     <div class="row">
         <div class="col-md-6">
-            <label for="select-vmta">vmta (max 3) :</label>
+            <label for="select-vmta">vmta :</label>
             <select id="select-vmta" name="vmta[]" multiple class="selectized">
-                <optgroup label="server">
-                    <option value="">Select a vmta...</option>
-                    <option value="0">vmta1 : 146.247.24.68</option>
-                    <option value="3">vmta4 : 146.247.24.92</option>
-                </optgroup>
-                <optgroup label="server 2">
-                    <option value="">Select a vmta...</option>
-                    <option value="0">vmta1 : 146.247.24.68</option>
-                    <option value="3">vmta4 : 146.247.24.92</option>
-                </optgroup>
+
+                @foreach ($select as $servername=>$ips)
+                    <optgroup label="{{$servername}}">
+                        @foreach($ips as $idip => $ip)
+                            <option value="{{$idip}}">{{$ip}}</option>
+                        @endforeach
+                    </optgroup>
+                @endforeach
             </select>
         </div>
 
