@@ -59,7 +59,6 @@ class Connection
         $this->command(NEWLINE);
         $this->command($mail->DATA['body']);
         $this->command(".");
-        //$this->response .= stream_get_contents($this->connection) . '<br>';
     }
 
 
@@ -68,7 +67,7 @@ class Connection
 
         $this->command('QUIT');
         //$this->response = stream_get_contents($this->stream);
-        echo stream_get_contents($this->stream);
+        //echo stream_get_contents($this->stream);
 
         if (is_resource($this->stream)){
             fclose($this->stream);

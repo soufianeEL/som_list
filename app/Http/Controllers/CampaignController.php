@@ -49,17 +49,17 @@ class CampaignController extends Controller {
 	{
         $vmta = "0,1,2,3";
         $msg_vmta = 3;
-        $msg_conn = 1000;
+        $msg_conn = 1100000;
         $from = 'test@email';
         //$to = $_POST["to"];
         $subject = "subject";
         $headers = "Content-Type: text/plain;";
         $message = "laravel app
                     my msg heeeeeeeere
-                    dispatch - data.txt.save";
+                    dispatch - data.txt.save-Q-push-db";
 
-        //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
-        $this->dispatch(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
+        Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
+        //$this->dispatch(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
 
         echo 'ook';
 	}

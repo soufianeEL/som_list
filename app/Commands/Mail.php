@@ -37,59 +37,55 @@ class Mail {
         $this->MAIL_FROM = $from;
     }
 
-    function connect(){
-        $this->socket_context = function_exists('stream_socket_client');
-        if ($this->socket_context){ // if true : function exist
-            $this->socket_context = stream_context_create(array());
-            $this->connection = @stream_socket_client($this->HOST . ":" . $this->PORT,
-                $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $this->socket_context);
-            return true;
-        }
-        else {
-            echo "Connection: stream_socket_client not available, falling back to fsockopen";
-            return false;
-        }
-    }
-
-    function command($cmd) {
-        fwrite($this->connection, $cmd . NEWLINE) ;
-    }
-
     function addheader($name, $value){
         $this->DATA['headers'] .=  $name . ': ' . $value . NEWLINE;
     }
 
-    function Send($connection){
-        //echo "from send -- ";
+//    function connect(){
+//        $this->socket_context = function_exists('stream_socket_client');
+//        if ($this->socket_context){ // if true : function exist
+//            $this->socket_context = stream_context_create(array());
+//            $this->connection = @stream_socket_client($this->HOST . ":" . $this->PORT,
+//                $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $this->socket_context);
+//            return true;
+//        }
+//        else {
+//            echo "Connection: stream_socket_client not available, falling back to fsockopen";
+//            return false;
+//        }
+//    }
 
-        if($connection == null){
-            echo ' => connection == null';
-            return false;
-        }
-        $this->connection = $connection;
 
-        if($this->connection == null){
-            echo ' => conn == null';
-            return false;
-        }
+//    function command($cmd) {
+//        fwrite($this->connection, $cmd . NEWLINE) ;
+//    }
 
-        $this->command("HELO sure.somsales.com");
-        $this->command("MAIL FROM: <$this->MAIL_FROM>");
-        $this->command("RCPT TO: <$this->RCPT_TO>");
-        $this->command("DATA");
-        $this->command($this->DATA['headers']);
-        $this->command(NEWLINE);
-        $this->command($this->DATA['body']);
-        $this->command(".");
+//    function Send($connection){
+//
+//        if($connection == null){
+//            echo ' => connection == null';
+//            return false;
+//        }
+//        $this->connection = $connection;
+//
+//        if($this->connection == null){
+//            echo ' => conn == null';
+//            return false;
+//        }
+//
+//        $this->command("HELO sure.somsales.com");
+//        $this->command("MAIL FROM: <$this->MAIL_FROM>");
+//        $this->command("RCPT TO: <$this->RCPT_TO>");
+//        $this->command("DATA");
+//        $this->command($this->DATA['headers']);
+//        $this->command(NEWLINE);
+//        $this->command($this->DATA['body']);
+//        $this->command(".");
+//    }
 
-        //$this->response .= stream_get_contents($this->connection) . '<br>';
-
-    }
-
-    function close($content = ''){
-        $this->command('QUIT');
-        //echo 'from close ' . $content . '<br>';
-    }
+//    function close($content = ''){
+//        $this->command('QUIT');
+//    }
 
 }
 
