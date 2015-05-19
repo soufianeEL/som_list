@@ -6,6 +6,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
+//define('NEWLINE' ,"\n");
 
 class SendCampaign extends Command implements SelfHandling, ShouldBeQueued {
 
@@ -44,6 +45,7 @@ class SendCampaign extends Command implements SelfHandling, ShouldBeQueued {
 	 */
 	public function handle()
 	{
+
         //$event = $this->event;
 
         if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
@@ -86,6 +88,7 @@ class SendCampaign extends Command implements SelfHandling, ShouldBeQueued {
 
         $time_taken = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
         echo "Process Time: {$time_taken}" .NEWLINE;
+
 	}
 
     public function msg_vmta($compteur, $msg_vmta, $nbr_vmta){

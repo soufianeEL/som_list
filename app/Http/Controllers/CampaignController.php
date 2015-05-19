@@ -13,6 +13,7 @@ use App\Models\Server;
 use App\Models\Subject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
 
 class CampaignController extends Controller {
@@ -49,17 +50,16 @@ class CampaignController extends Controller {
 	{
         $vmta = "0,1,2,3";
         $msg_vmta = 3;
-        $msg_conn = 1100000;
+        $msg_conn = 10000;
         $from = 'test@email';
         //$to = $_POST["to"];
         $subject = "subject";
         $headers = "Content-Type: text/plain;";
         $message = "laravel app
                     my msg heeeeeeeere
-                    dispatch - data.txt.save-Q-push-db";
+                    dispatch - data.txt.save-bckg ok";
 
-        Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
-        //$this->dispatch(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
+        //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
 
         echo 'ook';
 	}

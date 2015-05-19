@@ -13,8 +13,8 @@
                     <span class="menu-title">Affiliates - Offers</span>
                 </a>
                 <ul>
-                    <li><a href="/affiliates">Affiliates</a></li>
-                    <li><a href="/offers">Offers</a></li>
+                    <li><a href="{{ URL::route('affiliates.index') }}">Affiliates</a></li>
+                    <li><a href="{{ URL::route('offers.index') }}">Offers</a></li>
                 </ul>
             </li>
             <li class="first_level">
@@ -24,8 +24,8 @@
                 </a>
                 <ul>
                     <li class="submenu-title">Campaigns</li>
-                    <li><a href="/prepared-offers">Prepared offers </a></li>
-                    <li><a href="/campaigns">Campaigns</a></li>
+                    <li><a href="{{ URL::route('prepared-offers.index') }}">Prepared offers </a></li>
+                    <li><a href="{{ URL::route('campaigns.index') }}">Campaigns</a></li>
                     <li><a href="chat.html">Chat</a></li>
                     <li><a href="tables_datatable.html">Tables</a></li>
                     <li><a href="user_profile.html">User Profil</a></li>
@@ -39,8 +39,8 @@
                     <span class="label label-danger">3</span>
                 </a>
                 <ul>
-                    <li><a href="/servers">Servers</a></li>
-                    <li><a href="/ips">Ips</a></li>
+                    <li><a href="{{ URL::route('servers.index') }}">Servers</a></li>
+                    <li><a href="{{ URL::route('ips.index') }}">Ips</a></li>
 
                 </ul>
             </li>

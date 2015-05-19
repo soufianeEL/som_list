@@ -12,7 +12,7 @@ define('NEWLINE' ,"\n");
 class Connection
 {
     public $HOST;
-    public $PORT = 7543;
+    public $PORT = 25;
     public $timeout = 30;
     public $socket_context;
     public $stream; //connection
@@ -25,11 +25,11 @@ class Connection
     }
 
     function open(){
-       // echo "from open -- ";
+        echo "from open -- ";
         $this->socket_context = function_exists('stream_socket_client');
         if ($this->socket_context){ // if true : function exist
             $this->socket_context = stream_context_create(array());
-            $this->stream = @stream_socket_client($this->HOST . ":" . $this->PORT,
+            $this->stream = stream_socket_client($this->HOST . ":" . $this->PORT,
                 $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $this->socket_context);
             return true;
         }
@@ -47,7 +47,7 @@ class Connection
         //echo "from send -- ";
 
         if($this->stream == null){
-            echo ' => connnnn == null';
+            echo ' => conn == null';
             return false;
         }
 
@@ -65,6 +65,10 @@ class Connection
     function close(){
         echo "from close -- ";
 
+        if($this->stream == null){
+            echo ' => connnnn == null';
+            return false;
+        }
         $this->command('QUIT');
         //$this->response = stream_get_contents($this->stream);
         //echo stream_get_contents($this->stream);
