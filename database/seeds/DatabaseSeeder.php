@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder {
         $this->call('ChildOfferTableSeeder');
         $this->call('ServerIpTableSeeder');
         $this->call('PreparedOfferTableSeeder');
+        $this->call('AccountListTableSeeder');
 
 	}
 

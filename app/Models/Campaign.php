@@ -11,8 +11,19 @@ class Campaign extends BaseModel {
         return $this->belongsTo('App\Models\PreparedOffer');
     }
 
+    public function lists()
+    {
+        return $this->belongsToMany('App\Models\AccountList','campaign_account_list', 'campaign_id', 'list_id');
+    }
+
+
     public function ips()
     {
         return $this->belongsToMany('App\Models\Ip');
+    }
+
+    public function messages()
+    {
+        return $this->hasMany('App\Models\Message');
     }
 }

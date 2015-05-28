@@ -43,26 +43,13 @@ class CampaignController extends Controller {
             }
         }
 
+//        foreach (Book::with('author')->get() as $book)
+//        {
+//            echo $book->author->name;
+//        }
+
         return view('campaigns.start', compact('var','select'));
     }
-
-	public function create()
-	{
-        $vmta = "0,1,2,3";
-        $msg_vmta = 3;
-        $msg_conn = 10000;
-        $from = 'test@email';
-        //$to = $_POST["to"];
-        $subject = "subject";
-        $headers = "Content-Type: text/plain;";
-        $message = "laravel app
-                    my msg heeeeeeeere
-                    dispatch - data.txt.save-bckg ok";
-
-        //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
-
-        echo 'ook';
-	}
 
 
 	public function store()
@@ -74,20 +61,45 @@ class CampaignController extends Controller {
         $campaign->status = 'trashed';
         $campaign->prepared_offer_id = $input["prepared_offer_id"];
 
-        $campaign->save();
-        $campaign->ips()->sync($input['vmta']);
+        //$campaign->save();
+        //$campaign->ips()->sync($input['vmta']);
 
         echo "saved oook";
+
+        $this->send();
 	}
+
+    public function send()
+    {
+
+        //dump(Input::all());
+        $ips = Input::get("vmta");
+        $vmta = "0,1,2,3";
+        $fraction = Input::get("msg_conn");
+        $msg_conn = 500;
+        $msg_ip = Input::get("msg_vmta");
+        $msg_vmta = 500;
+        $subject = Input::get("subject");
+        $from = Input::get("from");
+
+        $from2 = 'test@email';
+        //dump($ips);
+        $headers = Input::get("headers");
+        $message = Input::get("message");
+
+        //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
+
+        echo 'send ook';
+    }
 
 	public function show($id)
 	{
 		//
 	}
 
-	public function edit($id)
+	public function edit()
 	{
-		//
+        
 	}
 
 
