@@ -33,6 +33,8 @@ Route::model('ips', 'App\Models\Ip');
 Route::model('campaigns', 'App\Models\Campaign');
 Route::model('prepared_offers', 'App\Models\PreparedOffer');
 
+Route::model('lists', 'App\Models\AccountList');
+
 
 //
 Route::resource('affiliates','AffiliateController');
@@ -50,5 +52,7 @@ Route::get('ips',['as' => 'ips.index','uses' => 'IpController@index']);
 Route::resource('prepared-offers','PreparedOfferController');
 Route::get('campaigns/start/{prepared_offers}',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
 Route::resource('campaigns','CampaignController');
+
+Route::resource('lists','ListController');
 
 //not get

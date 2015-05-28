@@ -26,10 +26,9 @@ class PreparedOfferController extends Controller {
 
 	public function store()
 	{
-		//return view('campaigns.start');
         $input = Input::all();
-        //$prepared_offer = PreparedOffer::create($input);
-        $prepared_offer = PreparedOffer::find(10);
+        $prepared_offer = PreparedOffer::create($input);
+        //$prepared_offer = PreparedOffer::find(4);
         return Redirect::route('campaigns.start', compact('prepared_offer'))->with('message','Offer prepared');
 	}
 

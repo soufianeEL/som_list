@@ -26,7 +26,7 @@
                     <li class="submenu-title">Campaigns</li>
                     <li><a href="{{ URL::route('prepared-offers.index') }}">Prepared offers </a></li>
                     <li><a href="{{ URL::route('campaigns.index') }}">Campaigns</a></li>
-                    <li><a href="chat.html">Chat</a></li>
+                    <li><a href="{{ URL::route('lists.index') }}">Lists</a></li>
                     <li><a href="tables_datatable.html">Tables</a></li>
                     <li><a href="user_profile.html">User Profil</a></li>
                     <li><a href="user_list.html">User list</a></li>

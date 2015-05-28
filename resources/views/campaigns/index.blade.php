@@ -14,7 +14,8 @@
                 <td>name</td>
                 <td>status</td>
                 <td>type</td>
-                <td>prepared_offer_id</td>
+                <td>Lists</td>
+                <td>prepared_id</td>
                 <td>created_by</td>
                 <td>Actions</td>
             </tr>
@@ -27,8 +28,13 @@
                     <td>{{ $campaign->name }}</td>
                     <td>{{ $campaign->status }}</td>
                     <td>{{ $campaign->type }}</td>
+                    <td>
+                        @foreach($campaign->lists as $list)
+                            <a href="#" class="label label-success" style="margin-right: 4px"> {{ $list->name }} </a>
+                        @endforeach
+                    </td>
                     <td>{{ $campaign->prepared_offer_id }}</td>
-                    <td>{{ $campaign->created_by }}</td>
+                    <td> <a class="btn btn-primary" href="#"> <span class="el-icon-adult"> {{ \App\User::find($campaign->created_by)->name }} </span> </a></td>
                     <!-- we will also add show, edit, and delete buttons -->
                     <td>
                         {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('campaigns.destroy', $campaign))) !!}

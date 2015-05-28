@@ -4,6 +4,7 @@ use App\Commands\SendCampaign;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\AccountList;
 use App\Models\Campaign;
 use App\Models\Creative;
 use App\Models\FromLine;
@@ -18,6 +19,12 @@ use Illuminate\Support\Facades\Queue;
 
 class CampaignController extends Controller {
 
+    protected $rules = [
+        'vmta'  => ['required'],
+        'lists' => ['required','ip'],
+        //'msg_conn' => ['required','digits_between:100,100000'],
+//        'code' => ['required'],
+    ];
 
 	public function index()
 	{
@@ -34,39 +41,44 @@ class CampaignController extends Controller {
             'from' => FromLine::find($prepared_offer->from_line_id)->from,
             'creative' => Creative::find($prepared_offer->creative_id)->name
         ];
-        $servers = Server::where('active', 1)->get();
-        //$ips = Ip::where('server_id', 3)->get(array('id','ip'));;
+        $servers = Server::where('active', 1)->get(['id','name']);
         $select = array();
         foreach( $servers as $server){
             foreach($server->ips as $ip){
                 $select[$server->name][$ip->id] = $ip->ip;
             }
         }
+        $lists = AccountList::all(['id','name']);
 
 //        foreach (Book::with('author')->get() as $book)
 //        {
 //            echo $book->author->name;
 //        }
 
-        return view('campaigns.start', compact('var','select'));
+        return view('campaigns.start', compact('var','select','lists'));
     }
 
 
-	public function store()
+	public function store(Request $request)
 	{
+        $this->validate($request, $this->rules);
+
         $input = Input::all();
 
+        die('store');
         $campaign = new Campaign();
-        $campaign->name = $input["offre"] . '-' . $input["list"];
+        $campaign->name = $input["offre"] . '__' . date('Y-m-d-h:i:s');
         $campaign->status = 'trashed';
         $campaign->prepared_offer_id = $input["prepared_offer_id"];
 
-        //$campaign->save();
-        //$campaign->ips()->sync($input['vmta']);
-
-        echo "saved oook";
+        $campaign->save();
+        $campaign->ips()->sync($input['vmta']);
+        $campaign->lists()->sync($input['lists']);
+        $campaign->messages()->create(['name' => $campaign->id.'_'.$campaign->name,'headers' => Input::get("headers"),'body' => Input::get("message")]);
+        echo "saved oook <br>";
 
         $this->send();
+        return redirect()->back()->with('message', 'Campaign sent successfully');
 	}
 
     public function send()
@@ -88,8 +100,6 @@ class CampaignController extends Controller {
         $message = Input::get("message");
 
         //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
-
-        echo 'send ook';
     }
 
 	public function show($id)
@@ -99,7 +109,7 @@ class CampaignController extends Controller {
 
 	public function edit()
 	{
-        
+        echo ok;
 	}
 
 

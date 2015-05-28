@@ -44,8 +44,12 @@
             <input type="text" name="from" required="tre" class="form-control" value="{{$var['from']}}" readonly>
         </div>
         <div class="col-md-4">
-            <label for="list" class="req">Rcpt to liste</label>
-            <input type="text" name="list" class="form-control" value="data.txt">
+            <label for="lists" class="req">List(s)</label>
+            <select id="select-list" name="lists[]" multiple class="selectized">
+                @foreach($lists as $list)
+                    <option value="{{$list->id}}">{{$list->name}}</option>
+                @endforeach
+            </select>
         </div>
     </div>
     <div class="row">
@@ -88,6 +92,7 @@ Content-Type: text/plain;
     <script type="text/javascript">
         $(function () {
             $('#select-vmta').selectize();
+            $('#select-list').selectize();
 
         });
     </script>

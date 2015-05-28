@@ -33,3 +33,5 @@ if (file_exists($compiledPath))
 {
 	require $compiledPath;
 }
+
+include_once('start.php');

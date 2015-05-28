@@ -111,6 +111,7 @@ return [
 	'providers' => [
 
         'Illuminate\Html\HtmlServiceProvider',
+        'Barryvdh\Debugbar\ServiceProvider',
 		/*
 		 * Laravel Framework Service Providers...
 		 */
@@ -162,6 +163,7 @@ return [
 	'aliases' => [
         'Form'      => 'Illuminate\Html\FormFacade',
         'HTML'      => 'Illuminate\Html\HtmlFacade',
+        'Debugbar'  => 'Barryvdh\Debugbar\Facade',
 
 		'App'       => 'Illuminate\Support\Facades\App',
 		'Artisan'   => 'Illuminate\Support\Facades\Artisan',
