@@ -11,7 +11,7 @@
 
     <div class="row">
         <div class="col-md-6">
-            <label for="select-vmta">vmta :</label>
+            <label for="select-vmta">Ips :</label>
             <select id="select-vmta" name="vmta[]" multiple class="selectized">
 
                 @foreach ($select as $servername=>$ips)
@@ -25,31 +25,35 @@
         </div>
 
         <div class="col-md-3">
-            <label for="server">Msg/Vmta</label>
-            <input type="number" name="msg_vmta" value="3" class="form-control">
+            <label for="server">Msg/Ip</label>
+            <input type="number" name="msg_vmta" value="3" class="form-control" required>
         </div>
         <div class="col-md-3">
             <label for="port">Msg/Connection</label>
-            <input type="number" name="msg_conn" required="true" value="3" class="form-control">
+            <input type="number" name="msg_conn" value="3" class="form-control" required>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="offre" class="req">Offre</label>
-            <input type="text" name="offre" class="form-control" value="{{$var['offre']}}" readonly>
+            <input type="text" name="offre" required="true" class="form-control" value="{{$var['offre']}}" readonly>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="from" class="req">Mail from</label>
-            <input type="text" name="from" required="tre" class="form-control" value="{{$var['from']}}" readonly>
+            <input type="text" name="from" required="true" class="form-control" value="{{$var['from']}}" readonly>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label for="lists" class="req">List(s)</label>
             <select id="select-list" name="lists[]" multiple class="selectized">
                 @foreach($lists as $list)
                     <option value="{{$list->id}}">{{$list->name}}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="col-md-3">
+            <label for="fraction" class="req">Fraction</label>
+            <input type="text" name="fraction" class="form-control" value="10000">
         </div>
     </div>
     <div class="row">

@@ -37,7 +37,7 @@
                         <a class="btn btn-small btn-success" href="{{ URL::to('offers/' . $offer->id) }}">Show</a>
 
                         <!-- edit this affiliate (uses the edit method found at GET /affiliate/{id}/edit -->
-                        <a class="btn btn-small btn-info" href="{{ URL::to('offers/' . $offer->id . '/edit') }}">Edit</a>
+                        <a class="btn btn-small btn-info" id="edit-offer" data-href="{{ URL::to('offers/' . $offer->id . '/edit') }}">Edit</a>
 
                         <!-- delete the affiliate (uses the destroy method DESTROY /affiliate/{id} -->
                         {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
@@ -51,6 +51,32 @@
         </table>
     @endif
     <p>
-        <a class="btn btn-info" href="{{ URL::route('offers.create') }}">Create Offer</a>
+        <a class="btn btn-info" id="create-offer" data-href="{{ URL::route('offers.create') }}">Create Offer</a>
     </p>
+    <div id="modal" class="modal fade"></div>
+@endsection
+
+@section('js')
+    <script type="text/javascript" >
+
+
+        function getModal(url)
+        {
+            $.ajax({
+                type: 'get',
+                url: url,
+                //data: $('form').serialize(),
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#modal").modal("show");
+                }
+            });
+        }
+        $(document).on('click','#create-offer',function (){
+            getModal($(this).attr('data-href'));
+        });
+        $(document).on('click','#edit-offer',function (){
+            getModal($(this).attr('data-href'));
+        });
+    </script>
 @endsection

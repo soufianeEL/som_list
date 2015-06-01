@@ -10,12 +10,13 @@
     <h4><b>Price Format:</b>  {{ $offer->price_format }}</h4>
     <h4><b>Price Range:</b>   {{ $offer->price_range }}</h4>
 
+
     <div class="form-group">
         <label for="subject_id">Subject:</label>
         @if ( !$offer->subjects->count() )
             Your offer has no subjects.
         @else
-            <select name="subject_id">
+            <select class="form-control" name="subject_id">
                 <option value="" selected="selected"></option>
                 @foreach( $offer->subjects as $subject )
                     <option value="{{$subject->id}}">{{$subject->name}}</option>
@@ -29,7 +30,7 @@
         @if ( !$offer->creatives->count() )
             Your offer has no creatives.
         @else
-            <select name="creative_id">
+            <select class="form-control" name="creative_id">
                 <option value="" selected="selected"></option>
                 @foreach( $offer->creatives as $creative )
                     <option value="{{$creative->id}}">{{$creative->name}}</option>
@@ -43,7 +44,7 @@
         @if ( !$offer->from_lines->count() )
             Your offer has no From Lines.
         @else
-            <select name="from_line_id">
+            <select class="form-control" name="from_line_id">
                 <option value="" selected="selected"></option>
                 @foreach( $offer->from_lines as $from_line )
                     <option value="{{$from_line->id}}">{{$from_line->from}}</option>

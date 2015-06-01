@@ -4,7 +4,9 @@ use App\Models\Affiliate;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 use Input;
 use Illuminate\Http\Request;
 
@@ -32,15 +34,22 @@ class AffiliateController extends Controller {
         return view('offers.index', compact('offers'));
     }
 
-	public function create()
+    public function create(Request $request)
 	{
-		return view('affiliates.create');
+        if($request->ajax())
+            //return View::make('affiliates._create')->render();
+            return view('affiliates._create');
+        else
+            return view('affiliates.create');
 	}
 
-    public function edit(Affiliate $affiliate)
+    public function edit(Request $request,Affiliate $affiliate)
     {
-        //$affiliate = Affiliate::find($id);
-        return view('affiliates.edit',compact('affiliate'));
+        if($request->ajax()){
+            return view('affiliates._edit',compact('affiliate'));
+        }
+        else
+            return view('affiliates.edit',compact('affiliate'));
     }
 
 
@@ -50,7 +59,6 @@ class AffiliateController extends Controller {
 
         $input = Input::all();
         Affiliate::create( $input );
-
         return Redirect::route('affiliates.index')->with('message', 'Affiliate created');
 	}
 

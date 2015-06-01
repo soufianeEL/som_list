@@ -56,7 +56,7 @@ class SendCampaign extends Command implements SelfHandling, ShouldBeQueued {
         $connection = new Connection('somsales.com',7543);
 
         if ($handle) {
-            $connection->open();
+            $connection->open(); //helo !!
             while ($line = fgets($handle)) {
                 $elemt = explode("|",$line);
                 $email = $elemt[1];

@@ -41,19 +41,23 @@ class CampaignController extends Controller {
             'from' => FromLine::find($prepared_offer->from_line_id)->from,
             'creative' => Creative::find($prepared_offer->creative_id)->name
         ];
-        $servers = Server::where('active', 1)->get(['id','name']);
+
         $select = array();
-        foreach( $servers as $server){
+//        $servers = Server::where('active', 1)->get(['id','name']);
+//        foreach( $servers as $server){
+//            foreach($server->ips as $ip){
+//                $select[$server->name][$ip->id] = $ip->ip;
+//            }
+//        }
+
+        foreach( Server::with('ips')->where('active', 1)->get(['id','name']) as $server){
             foreach($server->ips as $ip){
+                //if ip active
                 $select[$server->name][$ip->id] = $ip->ip;
             }
         }
-        $lists = AccountList::all(['id','name']);
 
-//        foreach (Book::with('author')->get() as $book)
-//        {
-//            echo $book->author->name;
-//        }
+        $lists = AccountList::all(['id','name']);
 
         return view('campaigns.start', compact('var','select','lists'));
     }

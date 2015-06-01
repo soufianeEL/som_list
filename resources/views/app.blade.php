@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Laravel</title>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<link href="{{ asset('/css/app.css') }}" rel="stylesheet">
     <!-- main stylesheet -->
     <link href="{{ asset('/css/main.min.css') }}" rel="stylesheet" media="screen" id="mainCss">
@@ -18,7 +18,7 @@
     @yield('head')
 	<!-- Fonts -->
 	<link href='{{ asset('/fonts/googleapis.css') }}' rel='stylesheet' type='text/css'>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -43,15 +43,27 @@
 
             @if (Session::has('message'))
                 <div class="flash alert-info">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
                     <p>{{ Session::get('message') }}</p>
                 </div>
+                <script type="text/javascript">
+                    $('.close').click(function(){
+                        $('.flash').hide(500);
+                    });
+                </script>
             @endif
             @if ($errors->any())
-                <div class='flash alert-danger'>
+                <div class='flash alert-danger alert-dismissible'>
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                     @foreach ( $errors->all() as $error )
                         <p>{{ $error }}</p>
                     @endforeach
                 </div>
+                <script type="text/javascript">
+                    $('.close').click(function(){
+                        $('.flash').hide(500);
+                    });
+                </script>
             @endif
 
             @yield('content')
@@ -64,6 +76,7 @@
 
     <!-- fastclick -->
     <script src="{{ asset('/js/fastclick.min.js') }}"></script>
+
     <!-- typeahead -->
     <script src="{{ asset('/lib/typeahead/typeahead.bundle.min.js') }}"></script>
     <!-- scrollbar -->

@@ -31,24 +31,23 @@ class OfferController extends Controller {
         return view('offers.prepare', compact('offer'));
     }*/
 
-	public function create()
+	public function create(Request $request)
 	{
-		return view('offers.create');
+        if($request->ajax())
+		    return view('offers._create');
 	}
 
-    public function edit(Offer $offer)
+    public function edit(Request $request, Offer $offer)
     {
-        return view('offers.edit',compact('offer'));
+        if($request->ajax())
+            return view('offers._edit',compact('offer'));
     }
 
     public function store(Request $request)
 	{
         $this->validate($request, $this->rules);
-
         $input = Input::all();
-
         Offer::create($input);
-
         return Redirect::route('offers.index')->with('message','Offer created');
 	}
 
@@ -56,12 +55,8 @@ class OfferController extends Controller {
 	{
 		$this->validate($request, $this->rules);
         $input = array_except(Input::all(),'_method');
-
         $offer->update($input);
-
         return Redirect::route('offers.show', $offer)->with('message','Offer updated');
-
-
 	}
 
 	public function destroy(Offer $offer)
