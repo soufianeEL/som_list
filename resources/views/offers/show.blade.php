@@ -31,11 +31,9 @@
                         <td></td>
 
                         <td>
-                            {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('offers.subjects.destroy', $offer, $subject))) !!}
                             <a class="btn btn-small btn-success" href="{{$offer->id}}/subjects/{{$subject->id}}">Show</a>
-                            <a class="btn btn-small btn-info" href="{{$offer->id}}/subjects/{{$subject->id}}/edit">Edit</a>
-                            {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
-                            {!! Form::close() !!}
+                            <a class="btn btn-small btn-info" onclick="Modal($(this));" data-href="{{$offer->id}}/subjects/{{$subject->id}}/edit">Edit</a>
+                            <a class="btn btn-small btn-danger" data-method="DELETE" data-token="{{csrf_token()}}" data-confirm="Are you sure?" href="{{$offer->id}}/subjects/{{$subject->id}}">delete</a>
                         </td>
                     </tr>
             @endforeach
@@ -65,7 +63,7 @@
                     <td>
                         {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('offers.creatives.destroy', $offer, $creative))) !!}
                         <a class="btn btn-small btn-success" href="{{$offer->id}}/creatives/{{$creative->id}}">Show</a>
-                        <a class="btn btn-small btn-info" href="{{$offer->id}}/creatives/{{$creative->id}}/edit">Edit</a>
+                        <a class="btn btn-small btn-info" onclick="Modal($(this));" data-href="{{$offer->id}}/creatives/{{$creative->id}}/edit">Edit</a>
                         {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
                         {!! Form::close() !!}
                     </td>
@@ -75,7 +73,7 @@
         </table>
     @endif
 
-    <h3> From Lines | {!! link_to_route('offers.from_lines.create', 'Create fromLine', $offer) !!}</h3>
+    <h3> From Lines |<a onclick="Modal($(this));" data-href="{{URL::route('offers.from_lines.create', [$offer])}}">Create fromLine</a></h3>
     @if ( !$offer->from_lines->count() )
         Your offer has no From Lines.
     @else
@@ -94,13 +92,9 @@
                     <td>{{ $fromLine->from }}</td>
 
                     <td>
-
                         <a class="btn btn-small btn-success" href="{{ URL::to('/from_lines/' . $fromLine->id) }}">Show</a>
-
-                        <a class="btn btn-small btn-info" href="{{ URL::to('offers/'.$offer->id.'/from_lines/' . $fromLine->id . '/edit') }}">Edit</a>
-
+                        <a class="btn btn-small btn-info" onclick="Modal($(this));" data-href="{{$offer->id}}/from_lines/{{$fromLine->id}}/edit">Edit</a>
                         <a class="btn btn-small btn-warning" href="#">Delete</a>
-
                     </td>
                 </tr>
             @endforeach
@@ -116,6 +110,7 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('/js/laravel.js') }}"></script>
     <script type="text/javascript" >
         function Modal(a)
         {

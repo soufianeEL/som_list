@@ -27,9 +27,10 @@ class SubjectController extends Controller {
         if($request->ajax())
             return view('subjects._create', compact('offer'));
     }
-    public function edit(Offer $offer,Subject $subject)
+    public function edit(Request $request, Offer $offer,Subject $subject)
     {
-        return view('subjects.edit', compact('offer', 'subject'));
+        if($request->ajax())
+            return view('subjects._edit', compact('offer', 'subject'));
     }
 
 

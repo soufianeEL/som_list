@@ -26,6 +26,7 @@ Route::model('affiliates', 'App\Models\Affiliate');
 Route::model('offers', 'App\Models\Offer');
 Route::model('creatives', 'App\Models\Creative');
 Route::model('subjects', 'App\Models\Subject');
+Route::model('from_lines', 'App\Models\FromLine');
 
 Route::model('servers', 'App\Models\Server');
 Route::model('ips', 'App\Models\Ip');

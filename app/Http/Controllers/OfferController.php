@@ -23,6 +23,8 @@ class OfferController extends Controller {
 
     public function show(Offer $offer)
     {
+        //dd($offer);
+        //$offer.=$offer->with('subjects','creatives');
         return view('offers.show', compact('offer'));
     }
 
