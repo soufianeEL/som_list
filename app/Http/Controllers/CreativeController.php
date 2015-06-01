@@ -30,9 +30,10 @@ class CreativeController extends Controller {
         return view('creatives.edit',compact('offer','creative'));
     }
 
-	public function create(Offer $offer)
+	public function create(Request $request,Offer $offer)
 	{
-		return view('creatives.create',compact('offer'));
+        if($request->ajax())
+		    return view('creatives._create',compact('offer'));
 	}
 
 	public function store(Offer $offer)

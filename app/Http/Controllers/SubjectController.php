@@ -22,9 +22,10 @@ class SubjectController extends Controller {
         //
     }
 
-    public function create(Offer $offer)
+    public function create(Request $request,Offer $offer)
     {
-        return view('subjects.create', compact('offer'));
+        if($request->ajax())
+            return view('subjects._create', compact('offer'));
     }
     public function edit(Offer $offer,Subject $subject)
     {

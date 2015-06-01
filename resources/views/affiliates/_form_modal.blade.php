@@ -1,13 +1,13 @@
 <div class="form-group">
     <label for="name" class="col-sm-2 control-label">Name:</label>
     <div class="col-sm-8">
-        {!! Form::text('name',null,['class' => 'form-control']) !!}
+        {!! Form::text('name',null,['class' => 'form-control', 'required' => 'true']) !!}
     </div>
 </div>
 <div class="form-group">
     <label class="col-sm-2 control-label" for="code">Code:</label>
     <div class="col-sm-8">
-        {!! Form::text('code',null,['class' => 'form-control']) !!}
+        {!! Form::text('code',null,['class' => 'form-control', 'required' => 'true']) !!}
     </div>
 </div>
 <div class="form-group">

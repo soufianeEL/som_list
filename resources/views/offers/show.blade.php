@@ -2,13 +2,15 @@
 
 @section('content')
     <h2>{{ $offer->name }}</h2>
-    <h4><b>Code :</b>         {{ $offer->code }}</h4>
-    <h4><b>Description :</b>  {{ $offer->description }}</h4>
-    <h4><b>Vertical:</b>      {{ $offer->vertical }}</h4>
-    <h4><b>Price Format:</b>  {{ $offer->price_format }}</h4>
-    <h4><b>Price Range:</b>   {{ $offer->price_range }}</h4>
 
-    <h3> Subjects | {!! link_to_route('offers.subjects.create', 'Create subject', $offer) !!}</h3>
+    <h4 class="col-sm-4"><b>Code :</b>         {{ $offer->code }}</h4>
+    <h4 class="col-sm-8"><b>Description :</b>  {{ $offer->description }}</h4>
+
+    <h4 class="col-sm-4">Vertical:     {{ $offer->vertical }}</h4>
+    <h4 class="col-sm-4">Price Format:  {{ $offer->price_format }}</h4>
+    <h4 class="col-sm-4">Price Range:   {{ $offer->price_range }}</h4>
+
+    <h3> Subjects | <a onclick="Modal($(this));" data-href="{{URL::route('offers.subjects.create', [$offer])}}">Create subject</a></h3>
     @if ( !$offer->subjects->count() )
         Your offer has no subjects.
     @else
@@ -40,7 +42,7 @@
             </tbody>
         </table>
     @endif
-    <h3> <b>Creatives</b> | {!! link_to_route('offers.creatives.create', 'Create Creative', $offer) !!}</h3>
+    <h3> Creatives | <a onclick="Modal($(this));" data-href="{{URL::route('offers.creatives.create', [$offer])}}">Create Creative</a></h3>
     @if ( !$offer->creatives->count() )
         Your offer has no creatives.
     @else
@@ -109,4 +111,23 @@
     <p>
         <a class="btn btn-info" href="{{ URL::route('offers.index') }}">Back to offers</a>
     </p>
+
+    <div id="modal" class="modal fade"></div>
+@endsection
+
+@section('js')
+    <script type="text/javascript" >
+        function Modal(a)
+        {
+            $.ajax({
+                type: 'get',
+                url: a.attr('data-href'),
+                //data: $('form').serialize(),
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#modal").modal("show");
+                }
+            });
+        }
+    </script>
 @endsection

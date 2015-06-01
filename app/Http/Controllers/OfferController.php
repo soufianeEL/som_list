@@ -47,9 +47,10 @@ class OfferController extends Controller {
 	{
         $this->validate($request, $this->rules);
         $input = Input::all();
-        Offer::create($input);
-        return Redirect::route('offers.index')->with('message','Offer created');
-	}
+        $offer = Offer::create($input);
+        return Redirect::route('offers.show', $offer)->with('message','Offer created');
+
+    }
 
 	public function update(Offer $offer,Request $request)
 	{
