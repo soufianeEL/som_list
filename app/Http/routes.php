@@ -51,8 +51,12 @@ Route::get('ips',['as' => 'ips.index','uses' => 'IpController@index']);
 //Route::resource('ips','IpController');
 
 Route::resource('prepared-offers','PreparedOfferController');
+Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index']);
+Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController@store']);
+Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);
+Route::get('campaigns/{campaigns}/{prepared_offers}',['as' => 'campaigns.show','uses' => 'CampaignController@show']);
 Route::get('campaigns/start/{prepared_offers}',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
-Route::resource('campaigns','CampaignController');
+
 
 Route::resource('lists','ListController');
 

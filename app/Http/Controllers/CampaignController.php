@@ -21,7 +21,7 @@ class CampaignController extends Controller {
 
     protected $rules = [
         'vmta'  => ['required'],
-        'lists' => ['required','ip'],
+        'lists' => ['required'],
         //'msg_conn' => ['required','digits_between:100,100000'],
 //        'code' => ['required'],
     ];
@@ -69,7 +69,6 @@ class CampaignController extends Controller {
 
         $input = Input::all();
 
-        die('store');
         $campaign = new Campaign();
         $campaign->name = $input["offre"] . '__' . date('Y-m-d-h:i:s');
         $campaign->status = 'trashed';
@@ -106,9 +105,36 @@ class CampaignController extends Controller {
         //Queue::push(new SendCampaign($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn ));
     }
 
-	public function show($id)
+	public function show(Campaign $campaign, PreparedOffer $prepared_offer)
 	{
-		//
+        $var = [
+            'prepared_offre' => $prepared_offer->id,
+            'offre' => $prepared_offer->offer->name,
+            'subject' => Subject::find($prepared_offer->subject_id)->name,
+            'from' => FromLine::find($prepared_offer->from_line_id)->from,
+            'creative' => Creative::find($prepared_offer->creative_id)->name
+        ];
+
+        $select = [];
+        foreach( Server::with('ips')->where('active', 1)->get(['id','name']) as $server){
+            foreach($server->ips as $ip){
+                //if ip active
+                $select[$server->name][$ip->id] = $ip->ip;
+            }
+        }
+        // its le
+
+        $me= Campaign::find( $campaign->id)->with(array('ips'=>function($query){
+            $query->select('id');
+        }))->get();
+
+        dd($me);
+
+        //
+        $ips = $campaign->ips;
+        dd($ips);
+        $lists = AccountList::all(['id','name']);
+        return view('campaigns.start', compact('var','select','ips','lists'));
 	}
 
 	public function edit()

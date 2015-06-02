@@ -22,7 +22,7 @@ class IpController extends Controller {
 
 	public function create(Server $server)
 	{
-		return view('ips.create', compact('server'));
+		return view('ips._create', compact('server'));
 	}
 
 	public function store(Server $server, Request $request)
@@ -36,13 +36,13 @@ class IpController extends Controller {
 
 	public function show(Server $server,Ip $ip)
 	{
-		return view('ips.show', compact('server','ip'));
+		return view('ips._show', compact('server','ip'));
 	}
 
 
 	public function edit(Server $server,Ip $ip)
     {
-        return view('ips.edit', compact('server', 'ip'));
+        return view('ips._edit', compact('server', 'ip'));
 	}
 
 

@@ -12,12 +12,13 @@
     <div class="row">
         <div class="col-md-6">
             <label for="select-vmta">Ips :</label>
-            <select id="select-vmta" name="vmta[]" multiple class="selectized">
+            <select id="select-vmta" name="vmta[]" multiple class="selectized" value="[1,2]">
 
                 @foreach ($select as $servername=>$ips)
                     <optgroup label="{{$servername}}">
                         @foreach($ips as $idip => $ip)
-                            <option value="{{$idip}}">{{$ip}}</option>
+                            <option value="{{$idip}}"
+                                    @if($idip == 2) selected @endif>{{$ip}}</option>
                         @endforeach
                     </optgroup>
                 @endforeach

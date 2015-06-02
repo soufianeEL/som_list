@@ -9,7 +9,7 @@
     <h4>add_date: {{ $server->add_date }}</h4>
     <h4>return_date: {{ $server->return_date }}</h4>
 
-    <h2>IPs | {!! link_to_route('servers.ips.create', 'Create Ip', $server) !!} </h2>
+    <h2>IPs | <a onclick="Modal($(this));" data-href="{{URL::route('servers.ips.create', $server)}}">Create Ip</a> </h2>
     {{-- @include('ips/_index', ['ips' => $server->ips]) --}}
 
     @if( !$server->ips->count() )
@@ -42,8 +42,8 @@
                     <td>
                         {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('servers.ips.destroy', $server, $ip))) !!}
 
-                        <a class="btn btn-small btn-success" href="{{$server->id .'/ips/' . $ip->id }}"><i class="glyphicon glyphicon-info-sign"></i> Show</a>
-                        <a class="btn btn-small btn-info" href="{{$server->id .'/ips/' . $ip->id .'/edit'}}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                        <a class="btn btn-small btn-success" onclick="Modal($(this));" data-href="{{$server->id .'/ips/' . $ip->id }}"><i class="glyphicon glyphicon-info-sign"></i> Show</a>
+                        <a class="btn btn-small btn-info" onclick="Modal($(this));" data-href="{{$server->id .'/ips/'.$ip->id.'/edit'}}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
 
                         {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
                         {!! Form::close() !!}
@@ -58,4 +58,26 @@
     <p>
         <a class="btn btn-info" href="{{ URL::route('servers.index') }}">Back to servers</a>
     </p>
+    <div id="modal" class="modal fade"></div>
+@endsection
+
+@section('js')
+    <script src="{{ asset('/js/laravel.js') }}"></script>
+    <script type="text/javascript" >
+        function Modal(a)
+        {
+            $.ajax({
+                type: 'get',
+                url: a.attr('data-href'),
+                //data: $('form').serialize(),
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#modal").modal("show");
+                },
+                error: function() {
+                    alert("error: try later !!");
+                }
+            });
+        }
+    </script>
 @endsection

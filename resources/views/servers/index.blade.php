@@ -41,16 +41,10 @@
                     </td>
                     <td>ips (lien ici)<span class="glyphicon glyphicon-hdd"></span> </td>
 
-                    <!-- we will also add show, edit, and delete buttons -->
                     <td>
-                        {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('servers.destroy', $server))) !!}
-                        <!-- show the Server (uses the show method found at GET /Server/{id} -->
                         <a class="btn btn-small btn-success" href="{{ URL::to('servers/' . $server->id) }}"><i class="glyphicon glyphicon-info-sign"></i> Show</a>
-                        <!-- edit this Server (uses the edit method found at GET /Server/{id}/edit -->
-                        <a class="btn btn-small btn-info" href="{{ URL::to('servers/' . $server->id . '/edit') }}"><i class="glyphicon glyphicon-edit"></i> Edit</a>
-                        <!-- delete the Server (uses the destroy method DESTROY /Server/{id} -->
-                        {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
-                        {!! Form::close() !!}
+                        <a class="btn btn-small btn-info" onclick="Modal($(this));" data-href="servers/{{$server->id}}/edit"><i class="glyphicon glyphicon-edit"></i> Edit</a>
+                        <a class="btn btn-small btn-danger" data-method="DELETE" data-token="{{csrf_token()}}" data-confirm="Are you sure?" href="servers/{{$server->id}}">Delete</a>
 
                     </td>
                 </tr>
@@ -60,6 +54,42 @@
         </table>
     @endif
     <p>
-        <a class="btn btn-info" href="{{ URL::route('servers.create') }}">Create Server</a>
+        {{--<a class="btn btn-info" href="{{ URL::route('servers.create') }}">Create Server</a> |--}}
+        <a class="btn btn-info" onclick="Modal($(this));" data-href="{{ URL::route('servers.create')}}">Create Server x</a>
     </p>
+    <div id="modal" class="modal fade"></div>
+@endsection
+@section('js')
+    <script src="{{ asset('/js/laravel.js') }}"></script>
+    <script type="text/javascript" >
+        function Modal(a)
+        {
+            $.ajax({
+                type: 'get',
+                url: a.attr('data-href'),
+                //data: $('form').serialize(),
+                success: function (data) {
+                    $("#modal").html(data);
+                    $("#modal").modal("show");
+                },
+                error: function() {
+                    alert("error: try later !!");
+                }
+            });
+        }
+        {{--function Del(a)--}}
+        {{--{--}}
+            {{--$.ajax({--}}
+                {{--method: 'POST',--}}
+                {{--url: a.attr('data-href'),--}}
+                {{--data: {_token:"{{csrf_token()}}" , _method:"DELETE"},--}}
+                {{--success: function (data) {--}}
+                    {{--alert(data);--}}
+                {{--},--}}
+                {{--error: function() {--}}
+                    {{--alert("error: try later !!");--}}
+                {{--}--}}
+            {{--});--}}
+        {{--}--}}
+    </script>
 @endsection

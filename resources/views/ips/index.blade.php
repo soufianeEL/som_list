@@ -47,8 +47,4 @@
         </table>
     @endif
 
-
-    <p>
-        <a class="btn btn-info" href="{{ URL::route('servers.ips.create') }}">Create Ip</a>
-    </p>
 @endsection

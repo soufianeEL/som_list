@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 use App\Models\PreparedOffer;
 use App\Models\Campaign;
 use App\Models\CampaignIp;
+use App\Models\Message;
 
 class PreparedOfferTableSeeder extends Seeder {
 
@@ -31,6 +32,20 @@ class PreparedOfferTableSeeder extends Seeder {
                 'prepared_offer_id' => $j,
 //                'created_by' => 1
             ]);
+        }
+
+        for ($i = 1; $i < 3; $i++) {
+            for($j =1; $j < 6; $j++){
+                $offer = Campaign::find($j, ['id','prepared_offer_id'])->prepared_offer->offer;
+                Message::create([
+                    'name' => $offer->name. '__' . date('Y-m-d-h:i:s'),
+                    'headers' => "From: soufiane elh <soufiane@good.somsales.com>" . "\n" .
+                        "Content-Type: text/plain;",
+                    'body' => 'body ' . $i,
+                    'campaign_id' => $j
+//                'created_by' => 1
+                ]);
+            }
         }
 
         for($i =1; $i < 6; $i++) {

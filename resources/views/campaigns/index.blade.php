@@ -39,7 +39,7 @@
                     <td>
                         {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('campaigns.destroy', $campaign))) !!}
                         <!-- show the affiliate (uses the show method found at GET /affiliate/{id} -->
-                        <a class="btn btn-small btn-success" href="{{ URL::to('campaigns/' . $campaign->id) }}">Show</a>
+                        <a class="btn btn-small btn-success" href="{{ URL::to('campaigns/'.$campaign->id.'/'.$campaign->prepared_offer_id) }}">Show</a>
 
                         <!-- edit this affiliate (uses the edit method found at GET /affiliate/{id}/edit -->
                         <a class="btn btn-small btn-info" href="{{ URL::to('campaigns/' . $campaign->id . '/edit') }}">Edit</a>
@@ -55,7 +55,7 @@
             </tbody>
         </table>
     @endif
-    <p>
-        <a class="btn btn-info" href="{{ URL::route('campaigns.create') }}">Create campaign</a>
-    </p>
+    {{--<p>--}}
+        {{--<a class="btn btn-info" href="{{ URL::route('campaigns.create') }}">Create campaign</a>--}}
+    {{--</p>--}}
 @endsection

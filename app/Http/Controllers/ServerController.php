@@ -27,12 +27,12 @@ class ServerController extends Controller {
 
     public function edit(Server $server)
     {
-        return view('servers.edit', compact('server'));
+        return view('servers._edit', compact('server'));
     }
 
 	public function create()
 	{
-		return view('servers.create');
+		return view('servers._create');
 	}
 
 	public function store(Request $request)
@@ -58,6 +58,7 @@ class ServerController extends Controller {
 
 	public function destroy(Server $server)
 	{
+        $server->ips()->delete();
         $server->delete();
         return Redirect::route('servers.index')->with('message', 'Server deleted.');
 	}

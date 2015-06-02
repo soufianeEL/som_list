@@ -121,6 +121,9 @@
                 success: function (data) {
                     $("#modal").html(data);
                     $("#modal").modal("show");
+                },
+                error: function() {
+                    alert("error: try later !!");
                 }
             });
         }

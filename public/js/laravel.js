@@ -17,7 +17,6 @@
  
     registerEvents: function() {
       this.methodLinks.on('click', this.handleMethod);
-      this.token.on('click', this.handleMethod);
     },
  
     handleMethod: function(e) {
