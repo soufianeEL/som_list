@@ -40,7 +40,7 @@ Route::model('lists', 'App\Models\AccountList');
 //
 Route::resource('affiliates','AffiliateController');
 Route::resource('offers','OfferController');
-Route::get('offers/{offers}/prepare',['as' => 'offers.prepare','uses' => 'PreparedOfferController@create']);
+Route::get('offers/{id}/prepare',['as' => 'offers.prepare','uses' => 'PreparedOfferController@create']);
 Route::resource('offers.subjects','SubjectController');
 Route::resource('offers.creatives','CreativeController');
 Route::resource('offers.from_lines','FromLineController');
@@ -54,8 +54,8 @@ Route::resource('prepared-offers','PreparedOfferController');
 Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index']);
 Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController@store']);
 Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);
+Route::get('campaigns/{prepared_offers}/start',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
 Route::get('campaigns/{campaigns}/{prepared_offers}',['as' => 'campaigns.show','uses' => 'CampaignController@show']);
-Route::get('campaigns/start/{prepared_offers}',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
 
 
 Route::resource('lists','ListController');

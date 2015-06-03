@@ -18,9 +18,10 @@ class PreparedOfferController extends Controller {
         return view('prepared_offers.index', compact('p_offers'));
 	}
 
-	public function create(Offer $offer)
+	public function create($id)
 	{
-        return view('prepared_offers.create', compact('offer'));
+        $offer = Offer::with(['subjects','from_lines','creatives'])->find($id,['id','name']);
+        return view('prepared_offers._create', compact('offer'));
 	}
 
 
@@ -29,6 +30,7 @@ class PreparedOfferController extends Controller {
         $input = Input::all();
         $prepared_offer = PreparedOffer::create($input);
         //$prepared_offer = PreparedOffer::find(4);
+
         return Redirect::route('campaigns.start', compact('prepared_offer'))->with('message','Offer prepared');
 	}
 

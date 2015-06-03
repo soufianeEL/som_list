@@ -34,7 +34,7 @@
                         @endforeach
                     </td>
                     <td>{{ $campaign->prepared_offer_id }}</td>
-                    <td> <a class="btn btn-primary" href="#"> <span class="el-icon-adult"> {{ \App\User::find($campaign->created_by)->name }} </span> </a></td>
+                    <td> <a class="btn btn-primary" href="#"> <span class="el-icon-adult"> {{-- \App\User::find($campaign->created_by)->name --}} </span> </a></td>
                     <!-- we will also add show, edit, and delete buttons -->
                     <td>
                         {!! Form::open(array('class' => 'form-inline', 'method' => 'DELETE', 'route' => array('campaigns.destroy', $campaign))) !!}

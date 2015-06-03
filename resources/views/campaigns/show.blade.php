@@ -17,7 +17,7 @@
                 @foreach ($select as $servername=>$ips)
                     <optgroup label="{{$servername}}">
                         @foreach($ips as $idip => $ip)
-                            <option value="{{$idip}}">{{$ip}}</option>
+                            <option value="{{$idip}}" @if( in_array($idip,$c_ips )) selected @endif>{{$ip}}</option>
                         @endforeach
                     </optgroup>
                 @endforeach
@@ -47,7 +47,7 @@
             <label for="lists" class="req">List(s)</label>
             <select id="select-list" name="lists[]" multiple class="selectized">
                 @foreach($lists as $list)
-                    <option value="{{$list->id}}">{{$list->name}}</option>
+                    <option value="{{$list->id}}" @if( in_array($list->id,$c_lists )) selected @endif>{{$list->name}}</option>
                 @endforeach
             </select>
         </div>

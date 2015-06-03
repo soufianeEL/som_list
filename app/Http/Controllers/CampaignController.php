@@ -28,7 +28,9 @@ class CampaignController extends Controller {
 
 	public function index()
 	{
-		$campaigns= Campaign::all();
+        // to fix user problem later
+		//$campaigns= Campaign::with('lists')->with('ips')->get();
+		$campaigns= Campaign::with('lists')->get();
         return view('campaigns.index', compact('campaigns'));
 	}
 
@@ -37,9 +39,9 @@ class CampaignController extends Controller {
         $var = [
             'prepared_offre' => $prepared_offer->id,
             'offre' => $prepared_offer->offer->name,
-            'subject' => Subject::find($prepared_offer->subject_id)->name,
-            'from' => FromLine::find($prepared_offer->from_line_id)->from,
-            'creative' => Creative::find($prepared_offer->creative_id)->name
+            'subject' => $prepared_offer->subject()->name,
+            'from' => $prepared_offer->from()->from,
+            'creative' => $prepared_offer->creative()->name
         ];
 
         $select = array();
@@ -110,9 +112,9 @@ class CampaignController extends Controller {
         $var = [
             'prepared_offre' => $prepared_offer->id,
             'offre' => $prepared_offer->offer->name,
-            'subject' => Subject::find($prepared_offer->subject_id)->name,
-            'from' => FromLine::find($prepared_offer->from_line_id)->from,
-            'creative' => Creative::find($prepared_offer->creative_id)->name
+            'subject' => $prepared_offer->subject()->name,
+            'from' => $prepared_offer->from()->from,
+            'creative' => $prepared_offer->creative()->name
         ];
 
         $select = [];
@@ -122,19 +124,19 @@ class CampaignController extends Controller {
                 $select[$server->name][$ip->id] = $ip->ip;
             }
         }
-        // its le
+        /// to optimize later
+        $c_ips = [];
+        foreach($campaign->ips as $ip){
+            $c_ips[] = $ip->id;
+        }
+        /// to optimize later
+        $c_lists = [];
+        foreach($campaign->lists as $list){
+            $c_lists[] = $list->id;
+        }
 
-        $me= Campaign::find( $campaign->id)->with(array('ips'=>function($query){
-            $query->select('id');
-        }))->get();
-
-        dd($me);
-
-        //
-        $ips = $campaign->ips;
-        dd($ips);
         $lists = AccountList::all(['id','name']);
-        return view('campaigns.start', compact('var','select','ips','lists'));
+        return view('campaigns.show', compact('var','select','c_ips','c_lists','lists'));
 	}
 
 	public function edit()
