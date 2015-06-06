@@ -54,8 +54,10 @@ Route::resource('prepared-offers','PreparedOfferController');
 Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index']);
 Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController@store']);
 Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);
+Route::get('campaigns/{id}/edit',['as' => 'campaigns.edit','uses' => 'CampaignController@edit']);
 Route::get('campaigns/{prepared_offers}/start',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
 Route::get('campaigns/{campaigns}/{prepared_offers}',['as' => 'campaigns.show','uses' => 'CampaignController@show']);
+
 
 
 Route::resource('lists','ListController');

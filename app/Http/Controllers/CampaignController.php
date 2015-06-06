@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Commands\SendCampaign;
+use App\Commands\TestCommand;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -139,9 +140,13 @@ class CampaignController extends Controller {
         return view('campaigns.show', compact('var','select','c_ips','c_lists','lists'));
 	}
 
-	public function edit()
+    /**
+     * @param $id
+     */
+    public function edit($id)
 	{
-        echo ok;
+        Queue::push(new TestCommand());
+        echo "ook - ".date('Y-m-d-h:i:s');
 	}
 
 
