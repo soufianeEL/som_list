@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Model::unguard();
+        DB::table('users')->delete();
 
         User::create([
             'name' => 'soufiane',

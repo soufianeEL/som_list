@@ -1,9 +1,13 @@
 <?php namespace App\Http\Controllers;
 
+use App\Commands\Nohup;
 use App\Commands\SendCampaign;
 use App\Commands\TestCommand;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Queue as Myqueue;
+
+use App\Commands\exec;
 
 use App\Models\AccountList;
 use App\Models\Campaign;
@@ -13,10 +17,12 @@ use App\Models\Ip;
 use App\Models\PreparedOffer;
 use App\Models\Server;
 use App\Models\Subject;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Queue;
+
 
 class CampaignController extends Controller {
 
@@ -145,14 +151,34 @@ class CampaignController extends Controller {
      */
     public function edit($id)
 	{
-        Queue::push(new TestCommand());
-        echo "ook - ".date('Y-m-d-h:i:s');
+        $time =  time();
+        $campaign = Campaign::find($id);
+        $payload = serialize($campaign);
+        $q = Myqueue::create([
+            'payload'       => $payload,
+            'reserved_at'   => $time + 10
+        ]);
+        echo $time;
+
+
+
+//        echo $j = Queue::push(new TestCommand());
+//        echo $j = Queue::later(10,new TestCommand());
+//        $myexec = new Nohup("sleep 5");
+//        $pid = $myexec->run();
+//        echo "ook => $pid - ".date('Y-m-d-h:i:s');
+//        sleep(3);
+//        while($myexec->is_running()){
+//            echo "is runnig \n";
+//        }
+
 	}
 
 
-	public function update($id)
+	public function update($j)
 	{
-		//
+
+
 	}
 
 

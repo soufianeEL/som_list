@@ -11,6 +11,8 @@ class TestCommand extends Command implements SelfHandling, ShouldBeQueued {
 
 	use InteractsWithQueue, SerializesModels;
 
+    //protected $job;
+
 	/**
 	 * Create a new command instance.
 	 *
@@ -28,11 +30,16 @@ class TestCommand extends Command implements SelfHandling, ShouldBeQueued {
 	 */
 	public function handle()
 	{
-        file_put_contents('testcommand.txt','job started : '. date('Y-m-d-h:i:s') . PHP_EOL, FILE_APPEND );
-        echo 'job starts '.PHP_EOL;
-        sleep(10);
-        echo 'job ends '.PHP_EOL;
-        file_put_contents('testcommand.txt','it works! time : '. date('Y-m-d-h:i:s') . PHP_EOL, FILE_APPEND );
+        $rand = rand(0, 100);
+        $start = 'job '.$rand.' starts : '. date('Y-m-d-h:i:s') . PHP_EOL;
+        file_put_contents('testcommand.txt','f** '. $start, FILE_APPEND );
+        echo 'TC** '.$start;
+        sleep(20);
+        $end = 'it works! '.$rand.' : '. date('Y-m-d-h:i:s') . PHP_EOL;
+        echo 'TC** '.$end;
+        file_put_contents('testcommand.txt','f** ' .$end, FILE_APPEND );
+
+
 	}
 
 }

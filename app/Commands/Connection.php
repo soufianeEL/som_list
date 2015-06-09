@@ -42,6 +42,13 @@ class Connection
     function command($cmd) {
         fwrite($this->stream, $cmd . NEWLINE) ;
     }
+    function helo(){
+        if($this->stream == null){
+            echo ' => conn == null';
+            return false;
+        }
+        $this->command("HELO sure.somsales.com");
+    }
 
     function Send($mail){
         //echo "from send -- ";
@@ -51,7 +58,7 @@ class Connection
             return false;
         }
 
-        $this->command("HELO sure.somsales.com");
+        //$this->command("HELO sure.somsales.com");
         $this->command("MAIL FROM: <$mail->MAIL_FROM>");
         $this->command("RCPT TO: <$mail->RCPT_TO>");
         $this->command("DATA");

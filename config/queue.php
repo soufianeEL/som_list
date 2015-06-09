@@ -16,7 +16,7 @@ return [
 	|
 	*/
 
-    'default' => env('QUEUE_DRIVER', 'beanstalkd'),
+    'default' => 'database',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -28,6 +28,7 @@ return [
 	| for each back-end shipped with Laravel. You are free to add more.
 	|
 	*/
+
 
 	'connections' => [
 
@@ -45,7 +46,7 @@ return [
 		'beanstalkd' => [
 			'driver' => 'beanstalkd',
 			'host'   => 'localhost',
-			'queue'  => 'default',
+			'queue'  => 'default', //['default', 'soufiane']
 			'ttr'    => 60,
 		],
 
