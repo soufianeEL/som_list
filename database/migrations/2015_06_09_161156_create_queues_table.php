@@ -16,9 +16,20 @@ class CreateQueuesTable extends Migration {
 		{
 			$table->increments('id');
             $table->text('payload');
-            $table->unsignedInteger('reserved_at')->nullable();
+            $table->integer('after')->default(null);
             $table->integer('pid');
+            $table->integer('status')->default(-1); // 0 sending, 1 sent successfully
+            $table->integer('return');
+
+            $table->integer('campaign_id')->unsigned();
+            $table->softDeletes();
 		});
+
+        Schema::table('queues', function(Blueprint $table) {
+            $table->foreign('campaign_id')->references('id')->on('campaigns')
+                ->onDelete('restrict')
+                ->onUpdate('restrict');
+        });
 	}
 
 	/**

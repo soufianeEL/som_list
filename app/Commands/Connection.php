@@ -47,7 +47,8 @@ class Connection
             echo ' => conn == null';
             return false;
         }
-        $this->command("HELO sure.somsales.com");
+        echo 'from helo';
+        $this->command("HELO somsales.com");
     }
 
     function Send($mail){
@@ -70,15 +71,15 @@ class Connection
 
 
     function close(){
-        echo "from close -- ";
+//        echo "from close -- ";
 
         if($this->stream == null){
             echo ' => connnnn == null';
             return false;
         }
         $this->command('QUIT');
-        //$this->response = stream_get_contents($this->stream);
-        //echo stream_get_contents($this->stream);
+        $this->response = stream_get_contents($this->stream);
+        echo stream_get_contents($this->stream);
 
         if (is_resource($this->stream)){
             fclose($this->stream);

@@ -6,7 +6,7 @@
  * Time: 12:46
  */
 
-namespace app\Commands;
+namespace App\Commands;
 
 
 class exec {

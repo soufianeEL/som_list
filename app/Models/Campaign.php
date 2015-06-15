@@ -26,4 +26,18 @@ class Campaign extends BaseModel {
     {
         return $this->hasMany('App\Models\Message');
     }
+
+    public function queues()
+    {
+        return $this->hasMany('App\Models\Queue');
+    }
+
+    public function send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn){
+        $this->queues()->create([
+            'payload'       => "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn",
+            'after'         => 10,
+        ]);
+        //$this->status = "sent";
+        //$this->save();
+    }
 }

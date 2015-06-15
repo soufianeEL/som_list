@@ -23,6 +23,7 @@ class CreateOffersTable extends Migration {
             $table->string('price_format',50);
             $table->string('price_range',50);
             $table->string('sup_list',100); //Suppression list
+            //redirect_link ??
             $table->string('unsub_link',100); //Unsubscribe Link
             $table->boolean('active')->default(true);
             $table->integer('affiliate_id')->unsigned();

@@ -6,7 +6,7 @@
  * Time: 15:58
  */
 
-namespace app\Commands;
+namespace App\Commands;
 
 
 class Nohup {
@@ -21,9 +21,9 @@ class Nohup {
 
     function run($Priority = 0){
         if($Priority)
-            $PID = shell_exec("nohup nice -n {$Priority} {$this->command} > /dev/null & echo $!");
+            $PID = shell_exec("nohup nice -n {$Priority} php ".__DIR__."/{$this->command} >> nohup.out 2>&1 & echo $!");
         else
-            $PID = shell_exec("nohup {$this->command} > /dev/null & echo $!");
+            $PID = shell_exec("nohup php ".__DIR__."/{$this->command} >> nohup.out 2>&1 & echo $!");
         $this->pid=$PID;
         return($PID);
     }
@@ -40,6 +40,7 @@ class Nohup {
     }
 
     function kill(){
+        //posix_kill
         if($this->is_running()){
             exec("kill -KILL {$this->pid}");
             return true;

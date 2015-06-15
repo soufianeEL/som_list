@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h1> campaigns </h1>
+    <h1> campaigns <span class="el-icon-random bs_ttip" title="send request" onclick="test($(this));" data-href="{{ URL::to('campaigns/status') }}"></span></h1>
 
     @if( !$campaigns->count() )
         <b>there is no campaigns</b>
@@ -26,7 +26,13 @@
                 <tr>
                     <td>{{ $campaign->id }}</td>
                     <td>{{ $campaign->name }}</td>
-                    <td>{{ $campaign->status }}</td>
+                    <td>{{$campaign->status}}
+                        @if($campaign->status=='in progress')
+                            : <span class="el-icon-pause bs_ttip" title="click to pause" onclick="pause($(this));" data-href="{{ URL::to('campaigns/'.$campaign->id.'/status') }}"></span>
+                        @elseif($campaign->status=='paused')
+                            : <span class="el-icon-play bs_ttip" title="click to resume" onclick="resume($(this));" data-href="{{ URL::to('campaigns/'.$campaign->id.'/status') }}"></span>
+                        @endif
+                    </td>
                     <td>{{ $campaign->type }}</td>
                     <td>
                         @foreach($campaign->lists as $list)
@@ -58,4 +64,63 @@
     {{--<p>--}}
         {{--<a class="btn btn-info" href="{{ URL::route('campaigns.create') }}">Create campaign</a>--}}
     {{--</p>--}}
+@endsection
+
+@section('js')
+    <script type="text/javascript" >
+        $(document).ready(function() {
+            var arr = $("table td:nth-child(3) span.el-icon-pause");
+//            $.map(arr,function(n){
+//                var id = setInterval(function(){
+//                    is_sent($(n), id)},3000);});
+        });
+
+        function is_sent(a, id)
+        {
+            $.ajax({
+                type: 'get',
+                url: a.attr('data-href'),
+                success: function (data) {
+                    console.log(data);
+                    if(data=='sent'){
+                        clearInterval(id);
+                        a.parent().text('sent');
+//                        a.parent().animate({fontSize: "4em"}, function() {
+//                            $(this).animate({fontSize: "1em"}, {duration: 3000});
+//                        });
+// reset
+//                        a.parent().css({
+//                            fontSize: ""
+//                        });
+                    }
+                },
+                error: function() {
+                    alert("error: try later !!");
+                }
+            });
+        }
+        function resume(a)
+        {
+            alert(a);
+            a.html("<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-href='{{ URL::to('campaigns/'.$campaign->id.'/status') }}'></span>");
+        }
+        function pause(a)
+        {
+            alert(a);
+            a.html("<span class='el-icon-play bs_ttip' title='click to resume' onclick='resume($(this));' data-href='{{ URL::to('campaigns/'.$campaign->id.'/status') }}'></span>");
+            //clearInterval
+        }
+        function test(a)
+        {
+            var arr = $("table td:nth-child(3) span.el-icon-pause");
+            $.ajax({
+                type: 'get',
+                url: a.attr('data-href'),
+                data: arr,
+                success: function (data) {
+                    alert('msg was sent :'+ data);
+                }
+            });
+        }
+    </script>
 @endsection

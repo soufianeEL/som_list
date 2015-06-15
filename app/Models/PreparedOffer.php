@@ -21,7 +21,19 @@ class PreparedOffer extends BaseModel {
     public function creative(){
         return Creative::find($this->creative_id);
     }
+    public function name(){
+        return $this->offer->name;
+    }
 
+    public function info(){
+        return [
+            'prepared_offre' => $this->id,
+            'offre' => $this->name(),
+            'subject' => $this->subject()->name,
+            'from' => $this->from()->from,
+            'creative' => $this->creative()->name
+        ];
+    }
 
     public function campaigns()
     {
