@@ -36,28 +36,20 @@ class Campaign extends BaseModel {
     public function send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn){
         $queue = $this->queue();
         if($queue->first()){
-            $q = [
-                'payload'       => "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn",
-                'after'         => 20,
-                ];
-            $queue->update($q);
+            //die('from if ');
+            $this->queue->payload = "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn";
+            $this->queue->after = 21;
+            $this->queue->save();
+
         }
         else{
+            //die('from else');
             $queue->create([
                 'payload'       => "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn",
                 'after'         => 10,
             ]);
         }
 
-
-//        $tmp = $this->queue()->firstOrCreate([
-//            'payload'       => "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn",
-//            'after'         => 10,
-//        ]);
-
-//
-        //$this->status = "sent";
-        //$this->save();
     }
 
     public  function pause(){
@@ -72,18 +64,18 @@ class Campaign extends BaseModel {
 
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function($model)
-        {
-            die('created');
-        });
-
-        static::updated(function($model)
-        {
-            die('update');
-        });
-    }
+//    public static function boot()
+//    {
+//        parent::boot();
+//
+//        static::created(function($model)
+//        {
+//            die('created');
+//        });
+//
+//        static::updated(function($model)
+//        {
+//            die('update');
+//        });
+//    }
 }

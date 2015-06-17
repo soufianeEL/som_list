@@ -7,7 +7,7 @@ pcntl_signal(SIGHUP,  "sig_handler");
 pcntl_signal(SIGINT, "sig_handler");
 
 define('NEWLINE' ,"\n");
-global $queue_id, $id_hundler;
+global $campaign_id, $id_hundler;
 if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
@@ -17,7 +17,8 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 //|apachee send 100|4|500";
 //$params = explode('|',$myarg);
 $params = explode('|',$argv[1]);
-$queue_id = $argv[2];
+$campaign_id = $argv[2];
+$id_hundler = $argv[3];
 $send = new Send($params[0],$params[1],$params[2],$params[3],$params[4],$params[5],$params[6]);
 
 exec("echo starts >> out.txt");
@@ -25,7 +26,7 @@ $return = $send->run();
 exec("echo ends >> out.txt");
 $time_taken = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
 exec("echo {$time_taken} >> out.txt");
-set_sent($queue_id,$return);
+set_sent($campaign_id,$return);
 
 function sig_handler($signo){ // this function will process sent signals
     if ($signo == SIGTERM || $signo == SIGHUP || $signo == SIGINT /*|| $signo == SIGSTOP*/){
@@ -36,15 +37,15 @@ function sig_handler($signo){ // this function will process sent signals
 }
 
 function set_paused(){
-    global $queue_id, $id_hundler;
+    global $campaign_id, $id_hundler;
     echo 'from set_paused';
     if(!$id_hundler){
-        echo " no return << $queue_id >> !!";
+        echo " no return << $campaign_id >> !!";
         return false;
     }
     $db = connect_to_db();
     //return = old.return + return;
-    $query = "UPDATE `queues` SET `status` = '2', `return` = {$id_hundler},`pid` = 'null' WHERE `id` = {$queue_id}; ";
+    $query = "UPDATE `queues` SET `status` = '2', `return` = {$id_hundler},`pid` = 'null' WHERE `campaign_id` = {$campaign_id}; ";
     $result = $db->query($query);
 
     if (!$result) {
@@ -54,14 +55,14 @@ function set_paused(){
     return true;
 }
 
-function set_sent($queue_id, $return){
+function set_sent($campaign_id, $return){
     if(!$return){
-        echo " no return << $queue_id >> !!";
+        echo " no return << $campaign_id >> !!";
         return false;
     }
     $db = connect_to_db();
 
-    $query = "UPDATE `queues` SET `status` = '1', `return` = {$return},`pid` = 'null' WHERE `id` = {$queue_id}; ";
+    $query = "UPDATE `queues` SET `status` = '1', `return` =  {$return},`pid` = 'null' WHERE `campaign_id` = {$campaign_id}; ";
     $result = $db->query($query);
 
     if (!$result) {
@@ -119,13 +120,18 @@ class Send {
 
         $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
         global $id_hundler;
-        $id = 0; $id_hundler = $id;
+        $id = 0; //$id_hundler = $id;
         $connection = new Connection('somsales.com',7543);
 
         if ($handle) {
             $connection->open(); //helo !!
             $connection->helo();
             while ($line = fgets($handle)) {
+
+                if($id < $id_hundler){
+                    $id++;
+                    continue;
+                }
                 $elemt = explode("|",$line);
                 $email = $elemt[1];
 
@@ -140,18 +146,19 @@ class Send {
 
                 if($id % $this->msg_conn == 0 && $id != 0){
                     $connection->close();
+                    //sleep(1);
                     $connection->open();
                     $connection->helo();
                 }
 
                 $connection->send($tmp_mail) ;
-                $id++;$id_hundler = $id;
+                $id++;$id_hundler++;
             }
             fclose($handle);
             $connection->close();
         }
         echo "nbr line = {$id} \n";
-        return $id;
+        return $id_hundler;
     }
 
     public function msg_vmta($compteur, $msg_vmta, $nbr_vmta){

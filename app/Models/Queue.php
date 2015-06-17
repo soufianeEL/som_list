@@ -17,28 +17,22 @@ class Queue extends Model {
     {
         parent::boot();
 
-        static::created(function($model)
+        static::creating(function($model)
         {
-            //$nuhup = New Nohup("send.php \"{$model->payload}\" \"{$model->id}\"");
-            //$nuhup = New Nohup("send.php");
-            die('created');
-            $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->id}\"");
+            $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->campaign_id}\" $model->return");
             $model->pid = $process_id;
             $model->status = 0;
-            $model->save();
 
-//            $nuhup->run();
-//            $model->pid = $nuhup->pid;
-//            $model->status = 0;
-//            $model->save();
-            //unset($nuhup);
         });
 
-        static::updated(function($model)
+        static::updating(function($model)
         {
-            die('update');
+//            die('update');
+            $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->campaign_id}\" $model->return");
+            $model->pid = $process_id;
+            $model->status = 0;
+
             $model->after = $model->after + 22;
-            $model->save();
         });
     }
 

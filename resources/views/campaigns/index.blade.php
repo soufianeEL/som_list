@@ -30,7 +30,7 @@
                         @if($campaign->status=='in progress')
                             : <span class="el-icon-pause bs_ttip" title="click to pause" onclick="pause($(this));" data-id="{{ $campaign->id}}"></span>
                         @elseif($campaign->status=='paused')
-                            : <span class="el-icon-play bs_ttip" title="click to resume" onclick="resume($(this));" data-href="{{ URL::to('campaigns/'.$campaign->id.'/status') }}"></span>
+                            : <span class='el-icon-play bs_ttip' title='click to resume' onclick='resume($(this));' data-href='{{ URL::to('campaigns/'.$campaign->id.'/resume') }}'></span>
                         @endif
                     </td>
                     <td>{{ $campaign->type }}</td>
