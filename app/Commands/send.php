@@ -1,7 +1,13 @@
 <?php
-//require __DIR__.'/../../bootstrap/autoload.php';
-define('NEWLINE' ,"\n");
 
+declare(ticks = 1); // how often to check for signals
+// These define the signal handling
+pcntl_signal(SIGTERM, "sig_handler");
+pcntl_signal(SIGHUP,  "sig_handler");
+pcntl_signal(SIGINT, "sig_handler");
+
+define('NEWLINE' ,"\n");
+global $queue_id, $id_hundler;
 if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
@@ -20,6 +26,33 @@ exec("echo ends >> out.txt");
 $time_taken = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
 exec("echo {$time_taken} >> out.txt");
 set_sent($queue_id,$return);
+
+function sig_handler($signo){ // this function will process sent signals
+    if ($signo == SIGTERM || $signo == SIGHUP || $signo == SIGINT /*|| $signo == SIGSTOP*/){
+        sleep(1);
+        set_paused();
+        exit();
+    }
+}
+
+function set_paused(){
+    global $queue_id, $id_hundler;
+    echo 'from set_paused';
+    if(!$id_hundler){
+        echo " no return << $queue_id >> !!";
+        return false;
+    }
+    $db = connect_to_db();
+    //return = old.return + return;
+    $query = "UPDATE `queues` SET `status` = '2', `return` = {$id_hundler},`pid` = 'null' WHERE `id` = {$queue_id}; ";
+    $result = $db->query($query);
+
+    if (!$result) {
+        echo "Update record failed: (" . $db->errno . ") " . $db->error;
+        return flase;
+    }
+    return true;
+}
 
 function set_sent($queue_id, $return){
     if(!$return){
@@ -85,7 +118,8 @@ class Send {
     {
 
         $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
-        $id = 0;
+        global $id_hundler;
+        $id = 0; $id_hundler = $id;
         $connection = new Connection('somsales.com',7543);
 
         if ($handle) {
@@ -111,7 +145,7 @@ class Send {
                 }
 
                 $connection->send($tmp_mail) ;
-                $id++;
+                $id++;$id_hundler = $id;
             }
             fclose($handle);
             $connection->close();

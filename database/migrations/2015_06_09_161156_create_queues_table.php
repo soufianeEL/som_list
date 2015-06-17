@@ -18,7 +18,7 @@ class CreateQueuesTable extends Migration {
             $table->text('payload');
             $table->integer('after')->default(null);
             $table->integer('pid');
-            $table->integer('status')->default(-1); // 0 sending, 1 sent successfully
+            $table->integer('status')->default(-1); // 0 sending, 1 sent successfully, !! 2 paused
             $table->integer('return');
 
             $table->integer('campaign_id')->unsigned();

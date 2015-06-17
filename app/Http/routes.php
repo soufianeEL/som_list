@@ -53,8 +53,11 @@ Route::get('ips',['as' => 'ips.index','uses' => 'IpController@index']);
 Route::resource('prepared-offers','PreparedOfferController');
 Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index']);
 Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController@store']);
-Route::get('campaigns/status',['as' => 'campaigns.allstatus','uses' => 'CampaignController@status']);
+Route::post('campaigns/status',['as' => 'campaigns.allstatus','uses' => 'CampaignController@status']);
 Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);
+// to set post
+Route::post('campaigns/{campaigns}/pause',['as' => 'campaigns.pause','uses' => 'CampaignController@pause']);
+
 Route::get('campaigns/{id}/edit',['as' => 'campaigns.edit','uses' => 'CampaignController@edit']);
 Route::get('campaigns/{campaigns}/status',['as' => 'campaigns.status','uses' => 'CampaignController@is_sent']);
 Route::get('campaigns/{prepared_offers}/start',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
@@ -62,6 +65,7 @@ Route::get('campaigns/{campaigns}/{prepared_offers}',['as' => 'campaigns.show','
 Route::patch('campaigns/{campaigns}/',['uses' => 'CampaignController@update']);
 Route::post('campaigns/{campaigns}/',['as' => 'campaigns.update','uses' => 'CampaignController@update']);
 Route::get('campaigns/send',['as' => 'campaigns.send','uses' => 'CampaignController@send']);
+
 
 
 

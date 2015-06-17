@@ -140,7 +140,20 @@ class CampaignController extends Controller {
     }
 
     public function status(){
-        return Campaign::all(['id']);
+        $ids = Input::get("ids");
+        //dump($ids);
+        $campaigns_in_progress = Campaign::where('status','in progress')->get(['id'])->toArray();
+
+        $return = array_map(function($n){return $n['id'];},$campaigns_in_progress);
+        return $return;
+    }
+
+    public function pause(Campaign $campaign){
+        $campaign->pause();
+    }
+
+    public function resume(Campaign $campaign){
+
     }
 
 }
