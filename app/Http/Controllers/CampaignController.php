@@ -118,9 +118,9 @@ class CampaignController extends Controller {
         $ips = Input::get("vmta");
         $vmta = "0,1,2,3";
         $fraction = Input::get("msg_conn");
-        $msg_conn = 1000;
+        $msg_conn = 500;
         $msg_ip = Input::get("msg_vmta");
-        $msg_vmta = 500;
+        $msg_vmta = 100;
         $subject = Input::get("subject");
         $from = Input::get("from");
 

@@ -36,6 +36,18 @@ function sig_handler($signo){ // this function will process sent signals
     }
 }
 
+function msg_vmta($compteur, $msg_vmta, $nbr_vmta){
+    $result = (int) ($compteur / $msg_vmta);
+    if ($result >= $msg_vmta && $msg_vmta > $nbr_vmta) {
+        $result = $result % $msg_vmta;
+    }
+    if ($compteur >= $msg_vmta * $nbr_vmta) {
+        $tmp = $compteur % ($msg_vmta * $nbr_vmta);
+        $result = (int) ($tmp / $msg_vmta);
+    }
+    return $result;
+}
+
 function set_paused(){
     global $campaign_id, $id_hundler;
     echo 'from set_paused';
@@ -97,17 +109,17 @@ class Send {
     public $nbr_vmta ;
 
 
-    public function __construct($ips, $from, $subject, $headers, $message, $msg_vmta, $msg_conn )
+    public function Send($ips, $from, $subject, $headers, $message, $msg_vmta, $msg_conn )
     {
         $this->ips = explode(',', trim($ips));
         $this->from = trim($from);
         $this->subject = trim($subject);
         $this->headers = trim($headers);
         $this->message = trim($message);
-        $this->msg_vmta = trim($msg_vmta);
-        $this->msg_conn = trim($msg_conn);
+        $this->msg_vmta =  (int) $msg_vmta;
+        $this->msg_conn = (int) $msg_conn;
 
-        $this->nbr_vmta = count($ips);
+        $this->nbr_vmta = count($this->ips);
     }
 
     /**
@@ -118,6 +130,7 @@ class Send {
     public function run()
     {
 
+//        $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
         $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
         global $id_hundler;
         $id = 0; //$id_hundler = $id;
@@ -139,7 +152,7 @@ class Send {
                 $tmp_mail->RCPT_TO = $email;
                 $tmp_mail->MAIL_FROM = $this->from;
 
-                $i = $this->msg_vmta($id,$this->msg_vmta,$this->nbr_vmta);
+                $i = msg_vmta($id,$this->msg_vmta,$this->nbr_vmta);
                 $id_vmta = $this->ips[$i];
 
                 $tmp_mail->prepare($this->vmta[$id_vmta], $this->subject, $this->message , $this->headers);
@@ -157,21 +170,8 @@ class Send {
             fclose($handle);
             $connection->close();
         }
-        echo "nbr line = {$id} \n";
+        echo "{$id} \n";
         return $id_hundler;
-    }
-
-    public function msg_vmta($compteur, $msg_vmta, $nbr_vmta){
-        $result = (int) ($compteur / $msg_vmta);
-
-        if ($result >= $msg_vmta && $msg_vmta > $nbr_vmta) {
-            $result = $result % $msg_vmta ;
-        }
-        if ($compteur >= $msg_vmta * $nbr_vmta) {
-            $tmp = $compteur % ($msg_vmta * $nbr_vmta);
-            $result = (int) ($tmp / $msg_vmta);
-        }
-        return $result;
     }
 
 }

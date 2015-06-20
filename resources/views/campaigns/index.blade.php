@@ -43,7 +43,7 @@
                         <!-- show the affiliate (uses the show method found at GET /affiliate/{id} -->
                         <a class="btn btn-small btn-success" href="{{ URL::to('campaigns/'.$campaign->id.'/'.$campaign->prepared_offer_id) }}">Show</a>
                         <!-- edit this affiliate (uses the edit method found at GET /affiliate/{id}/edit -->
-                        <a class="btn btn-small btn-info" href="{{ URL::to('campaigns/' . $campaign->id . '/edit') }}">Edit</a>
+                        <a class="btn btn-small btn-info" href="{{ URL::to('campaigns/'.$campaign->id.'/edit') }}">Edit</a>
                         <!-- delete the affiliate (uses the destroy method DESTROY /affiliate/{id} -->
                         {!! Form::submit('Delete', array('class' => 'btn btn-small btn-danger')) !!}
                         {!! Form::close() !!}
@@ -77,13 +77,13 @@
         {
             $.ajax({
                 type: 'post',
-                url: "campaigns/"+ a.data('id')+"/resume",//a.data('href'),
+                url:  a.data('href'),  //"campaigns/"+ a.data('id')+"/resume",//a.data('href'),
                 data: {_token: '{{csrf_token()}}' },
                 success: function (data) {
                     alert('in progress');
                     console.log(data);
                     a.parent().html("in progress : " +
-                    "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-href='{{$campaign->id}}'></span>");
+                    "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-id='{{$campaign->id}}'></span>");
                     all_status();
                 }
             });
