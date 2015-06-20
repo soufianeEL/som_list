@@ -39,6 +39,18 @@ class Handler extends ExceptionHandler {
 	{
 //        if ($e instanceof NotFoundHttpException)
 //            return response(view('errors.404'), 404);
+//
+        if (config('app.debug'))
+        {
+            $whoops = new \Whoops\Run;
+            $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
+
+            return response($whoops->handleException($e),
+                $e->getStatusCode(),
+                $e->getHeaders()
+            );
+        }
+//
 
 		return parent::render($request, $e);
 	}

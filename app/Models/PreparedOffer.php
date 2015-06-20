@@ -35,7 +35,7 @@ class PreparedOffer extends BaseModel {
         ];
     }
 
-    public function campaigns()
+    public function campaigns() //  should be has_one ??
     {
         return $this->hasMany('App\Models\Campaign');
     }

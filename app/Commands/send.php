@@ -18,7 +18,7 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
 //$params = explode('|',$myarg);
 $params = explode('|',$argv[1]);
 $campaign_id = $argv[2];
-$id_hundler = $argv[3];
+$id_hundler = ( count($argv) > 3 ? $argv[3] : 0 ) ; //($var > 2 ? true : false);
 $send = new Send($params[0],$params[1],$params[2],$params[3],$params[4],$params[5],$params[6]);
 
 exec("echo starts >> out.txt");

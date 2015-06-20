@@ -17,7 +17,6 @@ class Campaign extends BaseModel {
         return $this->belongsToMany('App\Models\AccountList','campaign_account_list', 'campaign_id', 'list_id');
     }
 
-
     public function ips()
     {
         return $this->belongsToMany('App\Models\Ip');
@@ -36,46 +35,41 @@ class Campaign extends BaseModel {
     public function send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn){
         $queue = $this->queue();
         if($queue->first()){
-            //die('from if ');
             $this->queue->payload = "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn";
             $this->queue->after = 21;
             $this->queue->save();
-
         }
         else{
-            //die('from else');
             $queue->create([
                 'payload'       => "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn",
                 'after'         => 10,
             ]);
         }
-
     }
 
-    public  function pause(){
+    public  function pause_job(){
         $queue = $this->queue()->first();
         if($queue){
-            Process::kill($queue->pid);
+            return Process::kill($queue->pid);
         }
-
+        return false;
     }
 
-    public  function resume(){
-
+    public  function resume_job(){
+        return 'ok from resume';
     }
 
 //    public static function boot()
 //    {
 //        parent::boot();
-//
 //        static::created(function($model)
 //        {
 //            die('created');
 //        });
-//
 //        static::updated(function($model)
 //        {
 //            die('update');
 //        });
 //    }
+
 }

@@ -27,12 +27,10 @@ class Queue extends Model {
 
         static::updating(function($model)
         {
-//            die('update');
             $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->campaign_id}\" $model->return");
             $model->pid = $process_id;
             $model->status = 0;
-
-            $model->after = $model->after + 22;
+            //$model->after = $model->after + 22;
         });
     }
 

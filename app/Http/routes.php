@@ -56,10 +56,11 @@ Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController
 Route::post('campaigns/status',['as' => 'campaigns.allstatus','uses' => 'CampaignController@status']);
 Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);
 // to set post
-Route::post('campaigns/{campaigns}/pause',['as' => 'campaigns.pause','uses' => 'CampaignController@pause']);
+Route::post('campaigns/{id}/pause',['as' => 'campaigns.pause','uses' => 'CampaignController@pause']);
+Route::post('campaigns/{id}/resume',['as' => 'campaigns.resume','uses' => 'CampaignController@resume']);
+Route::get('campaigns/{campaigns}/status',['as' => 'campaigns.status','uses' => 'CampaignController@get_status']);
 
 Route::get('campaigns/{id}/edit',['as' => 'campaigns.edit','uses' => 'CampaignController@edit']);
-Route::get('campaigns/{campaigns}/status',['as' => 'campaigns.status','uses' => 'CampaignController@is_sent']);
 Route::get('campaigns/{prepared_offers}/start',['as' => 'campaigns.start','uses' => 'CampaignController@start']);
 Route::get('campaigns/{campaigns}/{prepared_offers}',['as' => 'campaigns.show','uses' => 'CampaignController@show']);
 Route::patch('campaigns/{campaigns}/',['uses' => 'CampaignController@update']);
@@ -68,9 +69,17 @@ Route::get('campaigns/send',['as' => 'campaigns.send','uses' => 'CampaignControl
 
 
 
-
-
 Route::resource('lists','ListController');
 
 
 //not get
+
+
+//Route::bind('user', function($value)
+//{
+//    return User::where('name', $value)->first();
+//});
+//Route::model('user', 'User', function()
+//{
+//    throw new NotFoundHttpException;
+//});

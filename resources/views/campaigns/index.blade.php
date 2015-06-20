@@ -75,9 +75,20 @@
 
         function resume(a)
         {
-            a.parent().html("in progress : " +
-            "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-href='{{$campaign->id}}'></span>");
-            all_status();
+            $.ajax({
+                type: 'post',
+                url: "campaigns/"+ a.data('id')+"/resume",//a.data('href'),
+                data: {_token: '{{csrf_token()}}' },
+                success: function (data) {
+                    alert('in progress');
+                    console.log(data);
+                    a.parent().html("in progress : " +
+                    "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-href='{{$campaign->id}}'></span>");
+                    all_status();
+                }
+            });
+
+
         }
         function pause(a)
         {
@@ -87,6 +98,7 @@
                 data: {_token: '{{csrf_token()}}' },
                 success: function (data) {
                     alert('paused');
+                    console.log(data);
                     a.parent().html("paused : " +
                     "<span class='el-icon-play bs_ttip' title='click to resume' onclick='resume($(this));' data-href='{{ URL::to('campaigns/'.$campaign->id.'/resume') }}'></span>");
                 }
