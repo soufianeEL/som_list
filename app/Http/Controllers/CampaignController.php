@@ -148,13 +148,13 @@ class CampaignController extends Controller {
     public function pause($id){
         $campaign = Campaign::find($id);
         if($campaign)
-            return $campaign->pause_job();
+            $campaign->pause_job();
     }
 
     public function resume($id){
         $campaign = Campaign::find($id);
         if($campaign)
-            return $campaign->resume_job();
+            $campaign->resume_job();
     }
 
 }

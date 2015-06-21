@@ -81,7 +81,6 @@
                 data: {_token: '{{csrf_token()}}' },
                 success: function (data) {
                     alert('in progress');
-                    console.log(data);
                     a.parent().html("in progress : " +
                     "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-id='{{$campaign->id}}'></span>");
                     all_status();
@@ -98,7 +97,6 @@
                 data: {_token: '{{csrf_token()}}' },
                 success: function (data) {
                     alert('paused');
-                    console.log(data);
                     a.parent().html("paused : " +
                     "<span class='el-icon-play bs_ttip' title='click to resume' onclick='resume($(this));' data-href='{{ URL::to('campaigns/'.$campaign->id.'/resume') }}'></span>");
                 }

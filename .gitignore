@@ -1,3 +1,10 @@
 /vendor
 /node_modules
 .env
+
+public/nohup.out
+public/out.txt
+public/data.txt
+public/data2.csv
+public/data.txt.save
+public/data.csv

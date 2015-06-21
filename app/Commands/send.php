@@ -159,7 +159,6 @@ class Send {
 
                 if($id % $this->msg_conn == 0 && $id != 0){
                     $connection->close();
-                    //sleep(1);
                     $connection->open();
                     $connection->helo();
                 }
