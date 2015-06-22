@@ -13,12 +13,14 @@
 
 Route::get('/', 'WelcomeController@index');
 
-Route::get('home', 'HomeController@index');
+Route::get('home', ['as' => 'home', 'uses' => 'HomeController@index']);
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+
+
 
 // Provide controller methods with object instead of ID
 Route::model('affiliates', 'App\Models\Affiliate');
@@ -51,7 +53,7 @@ Route::get('ips',['as' => 'ips.index','uses' => 'IpController@index']);
 //Route::resource('ips','IpController');
 
 Route::resource('prepared-offers','PreparedOfferController');
-Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index']);
+Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index','permission' => 'campaigns|create','middleware' => ['acl']]);
 Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController@store']);
 Route::post('campaigns/status',['as' => 'campaigns.allstatus','uses' => 'CampaignController@status']);
 Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);

@@ -112,6 +112,7 @@ return [
 
         'Illuminate\Html\HtmlServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
+
 		/*
 		 * Laravel Framework Service Providers...
 		 */

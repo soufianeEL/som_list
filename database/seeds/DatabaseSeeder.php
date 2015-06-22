@@ -4,6 +4,8 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 use \App\User;
 use \App\Role;
+use \App\Permission;
+use \App\PermissionRole;
 
 class DatabaseSeeder extends Seeder {
 
@@ -31,20 +33,25 @@ class DatabaseSeeder extends Seeder {
             'role_id' => 1
         ]);
 
-        Role::create([
-            'name' => 'mailer'
-        ]);
-        Role::create([
-            'name' => 'sup'
-        ]);
-        Role::create([
-            'name' => 'offer manager'
-        ]);
-        Role::create([
-            'name' => 'admin'
-        ]);Role::create([
-            'name' => 'admin'
-        ]);
+        $tmp = ['Mailer','Sup','Offer Manager','Administrator'];
+        $tmp2 = ['mailer','sup','offer_m','admin'];
+        for($i=0; $i < 4;$i++){
+
+            Role::create([
+                'title' => $tmp[$i],
+                'slug' => $tmp[$i]
+            ]);
+        }
+
+        $tmp3 = ['affiliates','offers','servers','ips','lists','campaigns','users'];
+        for($i=0; $i < 7;$i++){
+
+            Permission::create([
+                'title' => 'crud in ' . $tmp3[$i],
+                'slug' => $tmp3[$i]
+            ]);
+        }
+
 
 
         // $this->call('UserTableSeeder');

@@ -37,10 +37,10 @@ class Handler extends ExceptionHandler {
 	 */
 	public function render($request, Exception $e)
 	{
-//        if ($e instanceof NotFoundHttpException)
-//            return response(view('errors.404'), 404);
-//
-        if (config('app.debug'))
+        if ($e instanceof NotFoundHttpException)
+            return response(view('errors.404'), 404);
+
+        /*if (config('app.debug'))
         {
             $whoops = new \Whoops\Run;
             $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
@@ -49,7 +49,7 @@ class Handler extends ExceptionHandler {
                 $e->getStatusCode(),
                 $e->getHeaders()
             );
-        }
+        }*/
 //
 
 		return parent::render($request, $e);

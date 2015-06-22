@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
 	use Authenticatable, CanResetPassword;
@@ -38,29 +39,9 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 	protected $hidden = ['password', 'remember_token'];
 
 
-    public function role(){
-        return $this->belongsTo('App\Role');
-    }
-
-    public function getRole(){
-        return $this->role->name;
-    }
-
-    public function isAdmin(){
-        return $this->role->name == 'admin';
-    }
-
-    public function isSup(){
-        return $this->role->name == 'sup';
-    }
-
-    public function isOfferManager(){
-        return $this->role->name == 'offer manager';
-    }
-
-    public function isMailer(){
-        return $this->role->name == 'mailer';
-    }
-
+    /**
+     * Application's Traits (Separation of various types of methods)
+     */
+    use UserACL, UserRelationShips;
 
 }
