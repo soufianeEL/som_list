@@ -25,7 +25,13 @@ class CampaignController extends Controller {
     protected $rules = [
         'vmta'  => ['required'],
         'lists' => ['required'],
-        //'msg_conn' => ['required','digits_between:100,100000'],  //        'code' => ['required'],
+        'msg_conn' => ['required','integer','between:100,1000'],  //        'code' => ['required'],
+        'msg_vmta' => ['required','integer','between:100,1000'],  //        'code' => ['required'],
+    ];
+
+    protected $message = [
+        'msg_vmta.between' => 'The Msg/Ip must be between :min -> :max.',
+        'msg_conn.between' => 'The Msg/Connexion must be between :min -> :max.',
     ];
 
 	public function index()
@@ -47,8 +53,12 @@ class CampaignController extends Controller {
     public function show(Campaign $campaign, PreparedOffer $prepared_offer)
     {
         $var = $prepared_offer->info();
-        $select = $select = $this->select_ips();
+        $select = $this->select_ips();
         $lists = AccountList::all(['id','name']);
+
+        $params = $campaign->lastParam();
+        $message = $campaign->lastMessage();
+
         /// to optimize later
         $c_ips = [];
         foreach($campaign->ips as $ip){
@@ -59,39 +69,60 @@ class CampaignController extends Controller {
         foreach($campaign->lists as $list){
             $c_lists[] = $list->id;
         }
-        return view('campaigns.show', compact('campaign','var','select','c_ips','c_lists','lists'));
+
+        return view('campaigns.show', compact('campaign','var','select','c_ips','c_lists','lists','params','message'));
     }
 
 
 	public function store(Request $request)
 	{
-        $this->validate($request, $this->rules);
+        $this->validate($request, $this->rules, $this->message);
 
-        $input = Input::all();
-
-        $campaign = new Campaign();
-        $campaign->name = $input["offre"] . '__' . date('Y-m-d-h:i:s');
-        $campaign->status = 'trashed';
-        $campaign->prepared_offer_id = $input["prepared_offer_id"];
-        $tmp = $input["prepared_offer_id"];
-        $campaign->save();
-        $campaign->ips()->sync($input['vmta']);
-        $campaign->lists()->sync($input['lists']);
-        $campaign->messages()->create(['name' => $campaign->id.'_'.$campaign->name,'headers' => Input::get("headers"),'body' => Input::get("message")]);
-
+        $campaign = $this->setCampaign();
+        $campaign = $this->setCampaignRelations($campaign);
         $this->send($campaign);
         return Redirect::route('campaigns.index')->with('message','Campaign sent successfully');
-        //return Redirect::route('campaigns.show', [$campaign->id, $campaign->prepared_offer_id])->with('message','Campaign sent successfully');
-        //return redirect()->back()->with('message', 'Campaign sent successfully');
 	}
+
+    public function setCampaign(){
+
+        $campaign = new Campaign();
+        $campaign->name = str_replace(' ','_',Input::get("offre")) . '__' . date('Y-m-d-h:i:s');
+        $campaign->status = 'trashed';
+        $campaign->prepared_offer_id = Input::get("prepared_offer_id");
+        $campaign->save();
+        return $campaign;
+    }
+
+    public function setCampaignRelations(Campaign $campaign){
+
+        $campaign->ips()->sync(Input::get("vmta"));
+        $campaign->lists()->sync(Input::get("lists"));
+        $campaign->messages()->create([
+            'name' => '',
+            'headers' => Input::get("headers"),
+            'body' => Input::get("message")
+        ]);
+        $campaign->params()->create([
+            'fraction' => Input::get("fraction"),
+            'rotation' => Input::get("msg_vmta"),
+            'delay' => Input::get("msg_conn"),
+            'seed' => '',
+            'lists' => implode(',',Input::get("lists")),
+            'ips' => implode(',',Input::get("vmta")),
+        ]);
+
+        return $campaign;
+    }
 
     public function update(Request $request, Campaign $campaign)
     {
-        $this->validate($request, $this->rules);
 
+        $this->validate($request, $this->rules, $this->message);
+
+        $campaign = $this->setCampaignRelations($campaign);
         $this->send($campaign);
-        return Redirect::route('campaigns.index')->with('message','Campaign sent successfully');
-        //return redirect()->back()->with('message', 'Campaign sent successfully');
+        return Redirect::route('campaigns.index')->with('message','Campaign updated & sent successfully');
     }
 
     public function edit($id)
@@ -119,15 +150,12 @@ class CampaignController extends Controller {
         $vmta = "0,1,2,3";
         $fraction = Input::get("msg_conn");
         $msg_conn = 500;
-        $msg_ip = Input::get("msg_vmta");
-        $msg_vmta = 100;
-        $subject = Input::get("subject");
-        $from = Input::get("from");
+        $msg_vmta = $campaign->lastParam()->rotation;
+        $subject = $campaign->subject()->name;
+        $from = $campaign->from()->from;
 
-        $from2 = 'test@email';
-        //dump($ips);
-        $headers = Input::get("headers");
-        $message = trim(Input::get("message"));
+        $headers = $campaign->lastMessage()->headers;
+        $message = $campaign->lastMessage()->body;
 
         $campaign->send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn);
 

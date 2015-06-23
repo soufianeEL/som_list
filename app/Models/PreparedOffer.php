@@ -11,7 +11,8 @@ class PreparedOffer extends BaseModel {
     {
         return $this->belongsTo('App\Models\Offer');
     }
-    // to use 'hasthrout' later
+
+    // to use 'has throut' later
     public function subject(){
         return Subject::find($this->subject_id);
     }

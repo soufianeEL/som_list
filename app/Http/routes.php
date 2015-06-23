@@ -53,7 +53,7 @@ Route::get('ips',['as' => 'ips.index','uses' => 'IpController@index']);
 //Route::resource('ips','IpController');
 
 Route::resource('prepared-offers','PreparedOfferController');
-Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index','permission' => 'campaigns|create','middleware' => ['acl']]);
+Route::get('campaigns',['as' => 'campaigns.index','uses' => 'CampaignController@index','permission' => 'campaigns|create',/*'middleware' => ['acl']*/]);
 Route::post('campaigns',['as' => 'campaigns.store','uses' => 'CampaignController@store']);
 Route::post('campaigns/status',['as' => 'campaigns.allstatus','uses' => 'CampaignController@status']);
 Route::delete('campaigns/{campaigns}',['as' => 'campaigns.destroy','uses' => 'CampaignController@destroy']);

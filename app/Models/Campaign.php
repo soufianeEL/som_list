@@ -27,9 +27,40 @@ class Campaign extends BaseModel {
         return $this->hasMany('App\Models\Message');
     }
 
+    public function params()
+    {
+        return $this->hasMany('App\Models\Params');
+    }
+
     public function queue()
     {
         return $this->hasOne('App\Models\Queue');
+    }
+
+    ///////////////////
+    public function offer(){
+        return $this->prepared_offer->offer();
+    }
+
+    public function subject(){
+        return $this->prepared_offer->subject();
+    }
+
+    public function from(){
+        return $this->prepared_offer->from();
+    }
+
+    public function creative(){
+        return $this->prepared_offer->creative();
+    }
+
+    public function lastMessage(){
+        return $this->messages->last();
+    }
+
+    public function lastParam()
+    {
+        return $this->params->last();
     }
 
     public function send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn){
