@@ -15,9 +15,14 @@
             <select id="select-vmta" name="vmta[]" multiple class="selectized" value="[1,2]">
 
                 @foreach ($select as $servername=>$ips)
-                    <optgroup label="{{$servername}}">
+                    <?php
+                    $tmp = explode('|',$servername);
+                    $server_name = $tmp[1];
+                    $server_id = $tmp[0];
+                    ?>
+                    <optgroup label="{{$server_name}}">
                         @foreach($ips as $idip => $ip)
-                            <option value="{{$idip}}" @if( in_array($idip,$c_ips )) selected @endif>{{$ip}}</option>
+                            <option value="{{$server_id.'-'.$idip}}" @if( in_array($idip,$c_ips )) selected @endif>{{$ip}}</option>
                         @endforeach
                     </optgroup>
                 @endforeach
@@ -25,12 +30,12 @@
         </div>
 
         <div class="col-md-3">
-            <label for="server">Msg/Ip</label>
+            <label for="msg_vmta">Msg/Ip</label>
             <input type="number" name="msg_vmta" value="@if($params){{$params->rotation}}@else{{500}}@endif" class="form-control" required>
         </div>
         <div class="col-md-3">
-            <label for="port">Msg/Connection</label>
-            <input type="number" name="msg_conn" value="@if($params){{$params->delay}}@else{{500}}@endif" class="form-control" required>
+            <label for="delay">X-delay</label>
+            <input type="number" name="delay" value="@if($params){{$params->delay}}@else{{500}}@endif" class="form-control" required>
         </div>
     </div>
 

@@ -1,15 +1,22 @@
 
-nbr line = 100 
-nbr line = 3000 
-from set_pausedfrom set_pausedfrom set_pausedfrom set_pausedfrom set_pausedfrom set_pausedfrom set_pausedfrom set_paused3000 
-from set_paused3000 
+from close 146.247.24.68 -- 
 3000 
+from close 146.247.24.68 -- 
+from set_pausedbefor rotate 
+from close 146.247.24.69 -- 
+from close 146.247.24.91 -- 
+from close 146.247.24.68 -- 
 3000 
+from close 146.247.24.68 -- 
+from close 146.247.24.69 -- 
+from set_pausedfrom close 146.247.24.68 -- 
+from close 146.247.24.69 -- 
+from set_pausedbefor rotate 
+from close 146.247.24.91 -- 
 3000 
-3000 
-3000 
-3000 
-from set_paused3000 
-from set_paused3000 
-3000 
+from close 146.247.24.68 -- 
+from set_pausedbefor rotate 
+from close 146.247.24.69 -- 
+from close 146.247.24.91 -- 
+from close 146.247.24.68 -- 
 3000 

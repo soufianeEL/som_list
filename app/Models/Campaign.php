@@ -63,18 +63,21 @@ class Campaign extends BaseModel {
         return $this->params->last();
     }
 
-    public function send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn){
+    public function send($fraction, $vmta, $from, $subject, $headers, $message, $msg_vmta, $delay){
         $queue = $this->queue();
+        $payload = "$vmta|$from|$subject|$headers|$message|$msg_vmta|$delay|$fraction";
+
         if($queue->first()){
-            $this->queue->payload = "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn";
+            $this->queue->payload = $payload;
             $this->queue->after = 21;
             $this->queue->save();
         }
         else{
             $queue->create([
-                'payload'       => "$vmta| $from| $subject| $headers| $message| $msg_vmta| $msg_conn",
+                'payload'       => $payload,
                 'after'         => 10,
             ]);
+            //die("after");
         }
     }
 

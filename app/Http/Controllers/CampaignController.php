@@ -25,13 +25,13 @@ class CampaignController extends Controller {
     protected $rules = [
         'vmta'  => ['required'],
         'lists' => ['required'],
-        'msg_conn' => ['required','integer','between:100,1000'],  //        'code' => ['required'],
-        'msg_vmta' => ['required','integer','between:100,1000'],  //        'code' => ['required'],
+        'delay' => ['required'],  //        'code' => ['required'],
+        'msg_vmta' => ['required','integer','between:100,3000'],  //        'code' => ['required'],
     ];
 
     protected $message = [
         'msg_vmta.between' => 'The Msg/Ip must be between :min -> :max.',
-        'msg_conn.between' => 'The Msg/Connexion must be between :min -> :max.',
+        'delay.between' => 'The Msg/Connexion must be between :min -> :max.',
     ];
 
 	public function index()
@@ -96,7 +96,12 @@ class CampaignController extends Controller {
 
     public function setCampaignRelations(Campaign $campaign){
 
-        $campaign->ips()->sync(Input::get("vmta"));
+        $ips = array_map(function($n){
+                $tmp = explode('-', $n);
+                return $tmp[1];
+            },Input::get("vmta"));
+
+        $campaign->ips()->sync($ips);
         $campaign->lists()->sync(Input::get("lists"));
         $campaign->messages()->create([
             'name' => '',
@@ -106,12 +111,11 @@ class CampaignController extends Controller {
         $campaign->params()->create([
             'fraction' => Input::get("fraction"),
             'rotation' => Input::get("msg_vmta"),
-            'delay' => Input::get("msg_conn"),
+            'delay' => Input::get("delay"),
             'seed' => '',
             'lists' => implode(',',Input::get("lists")),
             'ips' => implode(',',Input::get("vmta")),
         ]);
-
         return $campaign;
     }
 
@@ -133,23 +137,13 @@ class CampaignController extends Controller {
 	{
 	}
 
-    public function select_ips(){
-        $select = [];
-        foreach( Server::with('ips')->where('active', 1)->get(['id','name']) as $server){
-            foreach($server->ips as $ip){
-                //if ip active
-                $select[$server->name][$ip->id] = $ip->ip;
-            }
-        }
-        return $select;
-    }
-
     public function send(Campaign $campaign)
     {
-        $ips = Input::get("vmta");
+        $ips = implode(',',Input::get("vmta"));
         $vmta = "0,1,2,3";
-        $fraction = Input::get("msg_conn");
         $msg_conn = 500;
+        $fraction = Input::get("fraction");
+        $delay = Input::get("delay");
         $msg_vmta = $campaign->lastParam()->rotation;
         $subject = $campaign->subject()->name;
         $from = $campaign->from()->from;
@@ -157,8 +151,19 @@ class CampaignController extends Controller {
         $headers = $campaign->lastMessage()->headers;
         $message = $campaign->lastMessage()->body;
 
-        $campaign->send($vmta, $from, $subject, $headers, $message, $msg_vmta, $msg_conn);
+        $campaign->send($fraction, $ips, $from, $subject, $headers, $message, $msg_vmta, $delay);
 
+    }
+
+    public function select_ips(){
+        $select = [];
+        foreach( Server::with('ips')->where('active', 1)->get(['id','name']) as $server){
+            foreach($server->ips as $ip){
+                //if ip active
+                $select[$server->id.'|'.$server->name][$ip->id] = $ip->ip;
+            }
+        }
+        return $select;
     }
 
     public function get_status(Campaign $campaign){

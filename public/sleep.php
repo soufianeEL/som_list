@@ -1,78 +1,106 @@
-#!/usr/bin/php
 <?php
-//require __DIR__.'/../../bootstrap/autoload.php';
-
-declare(ticks = 1); // how often to check for signals
-// These define the signal handling
-pcntl_signal(SIGTERM, "sig_handler");
-pcntl_signal(SIGHUP,  "sig_handler");
-pcntl_signal(SIGINT, "sig_handler");
 
 define('NEWLINE' ,"\n");
-global $queue_id, $id_hundler;
+global $campaign_id, $id_hundler;
 if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-$myarg = "0,1,2,3|from 3|subject-3|From: soufiane elh <soufiane@good.somsales.com>
-Content-Type: text/plain;
-|apachee send 100|4|500";
-$params = explode('|',$myarg);
-$queue_id = 4 ;
-//$params = explode('|',$argv[1]);
-//$queue_id = $argv[2];
+$c = new Connection('somsales.com',7543);
+var_dump($c->isOpen());
+$c->open();
+var_dump($c->isOpen());
+$c->helo();
+echo fgets($c->stream,16);
+fseek($c->stream,16);
+echo fgets($c->stream,16);
+fseek($c->stream,16);
+echo fgets($c->stream);
+$c->close();
+var_dump($c->isOpen());
 
-$send = new Send($params[0],$params[1],$params[2],$params[3],$params[4],$params[5],$params[6]);
 
-exec("echo starts >> out.txt");
-$return = $send->run();
-exec("echo ends >> out.txt");
-$time_taken = microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'];
-exec("echo {$time_taken} >> out.txt");
-set_sent($queue_id,$return);
+die('ook');
 
-function sig_handler($signo){ // this function will process sent signals
-    if ($signo == SIGTERM || $signo == SIGHUP || $signo == SIGINT /*|| $signo == SIGSTOP*/){
-        sleep(1);
-        set_paused();
-        exit();
+function setCurrentServer($res2, $index){
+    $indx = array_keys($res2);
+    $id_server = $indx[$index];
+    $server = [];
+    $db = connect_to_db();
+    $query = "select `main_ip` from `servers` where `id`= {$id_server} ; ";
+    $result = $db->query($query) or die ("no query");
+    if ($result->num_rows <= 0) {
+        echo "0 results";
+    } else {
+        $server['ip'] = $result->fetch_row()[0];
     }
+
+    $query = "select `vmta` from `ips` where `id` in ({$res2[$id_server]}) ; ";
+    if ($stmt = $db->prepare($query)) {
+
+        $stmt->execute();
+        $stmt->bind_result($vmta);
+
+        /* Lecture des valeurs */
+        while ($stmt->fetch()) {
+            $server['vmta'][] = $vmta;
+        }
+        $stmt->close();
+    }
+
+    $db->close();
+    return $server;
+}
+
+
+
+function msg_vmta($compteur, $msg_vmta, $nbr_vmta){
+    $result = (int) ($compteur / $msg_vmta);
+    if ($result >= $msg_vmta && $msg_vmta > $nbr_vmta) {
+        $result = $result % $msg_vmta;
+    }
+    if ($compteur >= $msg_vmta * $nbr_vmta) {
+        $tmp = $compteur % ($msg_vmta * $nbr_vmta);
+        $result = (int) ($tmp / $msg_vmta);
+    }
+    return $result;
 }
 
 function set_paused(){
-    global $queue_id, $id_hundler;
+    global $campaign_id, $id_hundler;
     echo 'from set_paused';
     if(!$id_hundler){
-        echo " no return << $queue_id >> !!";
+        echo " no return << $campaign_id >> !!";
         return false;
     }
     $db = connect_to_db();
-
-    $query = "UPDATE `queues` SET `status` = '2', `return` = {$id_hundler},`pid` = 'null' WHERE `id` = {$queue_id}; ";
+    //return = old.return + return;
+    $query = "UPDATE `queues` SET `status` = '2', `return` = {$id_hundler},`pid` = 'null' WHERE `campaign_id` = {$campaign_id}; ";
     $result = $db->query($query);
 
     if (!$result) {
         echo "Update record failed: (" . $db->errno . ") " . $db->error;
         return flase;
     }
+    $db->close();
     return true;
 }
 
-
-function set_sent($queue_id, $return){
+function set_sent($campaign_id, $return){
     if(!$return){
-        echo " no return << $queue_id >> !!";
+        echo " no return << $campaign_id >> !!";
         return false;
     }
     $db = connect_to_db();
 
-    $query = "UPDATE `queues` SET `status` = '1', `return` = {$return},`pid` = 'null' WHERE `id` = {$queue_id}; ";
+    $query = "UPDATE `queues` SET `status` = '1', `return` =  {$return},`pid` = 'null' WHERE `campaign_id` = {$campaign_id}; ";
     $result = $db->query($query);
 
     if (!$result) {
         echo "Update record failed: (" . $db->errno . ") " . $db->error;
         return flase;
     }
+    $db->close();
     return true;
 }
 
@@ -100,17 +128,18 @@ class Send {
 
     public $nbr_vmta ;
 
-    public function __construct($ips, $from, $subject, $headers, $message, $msg_vmta, $msg_conn )
+
+    public function Send($ips, $from, $subject, $headers, $message, $msg_vmta, $msg_conn )
     {
         $this->ips = explode(',', trim($ips));
         $this->from = trim($from);
         $this->subject = trim($subject);
         $this->headers = trim($headers);
         $this->message = trim($message);
-        $this->msg_vmta = trim($msg_vmta);
-        $this->msg_conn = trim($msg_conn);
+        $this->msg_vmta =  (int) $msg_vmta;
+        $this->msg_conn = (int) $msg_conn;
 
-        $this->nbr_vmta = count($ips);
+        $this->nbr_vmta = count($this->ips);
     }
 
     /**
@@ -121,15 +150,21 @@ class Send {
     public function run()
     {
 
+//        $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
         $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
         global $id_hundler;
-        $id = 0; $id_hundler = $id;
+        $id = 0; //$id_hundler = $id;
         $connection = new Connection('somsales.com',7543);
 
         if ($handle) {
             $connection->open(); //helo !!
             $connection->helo();
             while ($line = fgets($handle)) {
+
+                if($id < $id_hundler){
+                    $id++;
+                    continue;
+                }
                 $elemt = explode("|",$line);
                 $email = $elemt[1];
 
@@ -137,7 +172,7 @@ class Send {
                 $tmp_mail->RCPT_TO = $email;
                 $tmp_mail->MAIL_FROM = $this->from;
 
-                $i = $this->msg_vmta($id,$this->msg_vmta,$this->nbr_vmta);
+                $i = msg_vmta($id,$this->msg_vmta,$this->nbr_vmta);
                 $id_vmta = $this->ips[$i];
 
                 $tmp_mail->prepare($this->vmta[$id_vmta], $this->subject, $this->message , $this->headers);
@@ -149,26 +184,13 @@ class Send {
                 }
 
                 $connection->send($tmp_mail) ;
-                $id++;$id_hundler = $id;
+                $id++;$id_hundler++;
             }
             fclose($handle);
             $connection->close();
         }
-        echo "nbr line = {$id} \n";
-        return $id;
-    }
-
-    public function msg_vmta($compteur, $msg_vmta, $nbr_vmta){
-        $result = (int) ($compteur / $msg_vmta);
-
-        if ($result >= $msg_vmta && $msg_vmta > $nbr_vmta) {
-            $result = $result % $msg_vmta ;
-        }
-        if ($compteur >= $msg_vmta * $nbr_vmta) {
-            $tmp = $compteur % ($msg_vmta * $nbr_vmta);
-            $result = (int) ($tmp / $msg_vmta);
-        }
-        return $result;
+        echo "{$id} \n";
+        return $id_hundler;
     }
 
 }
@@ -186,6 +208,12 @@ class Connection
     {
         $this->HOST = $host;
         $this->PORT = $port;
+    }
+
+    public function isOpen(){
+        if($this->stream)
+            return true;
+        return false;
     }
 
     function open(){

@@ -7,7 +7,7 @@ pcntl_signal(SIGHUP,  "sig_handler");
 pcntl_signal(SIGINT, "sig_handler");
 
 define('NEWLINE' ,"\n");
-global $campaign_id, $id_hundler;
+global $campaign_id, $id_hundler, $fraction;
 if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
@@ -20,7 +20,7 @@ $params = explode('|',$argv[1]);
 $campaign_id = $argv[2];
 $id_hundler = ( count($argv) > 3 ? $argv[3] : 0 ) ; //($var > 2 ? true : false);
 $send = new Send($params[0],$params[1],$params[2],$params[3],$params[4],$params[5],$params[6]);
-
+$fraction = $params[7];
 exec("echo starts >> out.txt");
 $return = $send->run();
 exec("echo ends >> out.txt");
@@ -30,7 +30,7 @@ set_sent($campaign_id,$return);
 
 function sig_handler($signo){ // this function will process sent signals
     if ($signo == SIGTERM || $signo == SIGHUP || $signo == SIGINT /*|| $signo == SIGSTOP*/){
-        sleep(1);
+        sleep(2);
         set_paused();
         exit();
     }
@@ -48,9 +48,21 @@ function msg_vmta($compteur, $msg_vmta, $nbr_vmta){
     return $result;
 }
 
+function rotate($counter, $step, $array_length){
+    $result = (int) ($counter / $step);
+    if ($result >= $step && $step > $array_length) {
+        $result = $result % $step;
+    }
+    if ($counter >= $step * $array_length) {
+        $tmp = $counter % ($step * $array_length);
+        $result = (int) ($tmp / $step);
+    }
+    return $result;
+}
+
 function set_paused(){
     global $campaign_id, $id_hundler;
-    echo 'from set_paused';
+    echo 'set_paused\n';
     if(!$id_hundler){
         echo " no return << $campaign_id >> !!";
         return false;
@@ -69,7 +81,7 @@ function set_paused(){
 
 function set_sent($campaign_id, $return){
     if(!$return){
-        echo " no return << $campaign_id >> !!";
+        echo " no return << campaign_id: $campaign_id >> !!";
         return false;
     }
     $db = connect_to_db();
@@ -105,11 +117,14 @@ class Send {
     public $message;
     public $msg_vmta;
     public $msg_conn;
+    public $delay;
 
+    public $current_server;
+    public $current_i_server;
     public $nbr_vmta ;
 
 
-    public function Send($ips, $from, $subject, $headers, $message, $msg_vmta, $msg_conn )
+    public function Send($ips, $from, $subject, $headers, $message, $msg_vmta, $delay )
     {
         $this->ips = explode(',', trim($ips));
         $this->from = trim($from);
@@ -117,9 +132,89 @@ class Send {
         $this->headers = trim($headers);
         $this->message = trim($message);
         $this->msg_vmta =  (int) $msg_vmta;
-        $this->msg_conn = (int) $msg_conn;
+        $this->delay = (int) $delay;
 
         $this->nbr_vmta = count($this->ips);
+
+        $res = []; // $res : array of ips grouped by id_server
+        foreach($this->ips as $value){
+            $tmp = explode('-', $value);
+            if(isset($res[$tmp[0]]))
+                $res[$tmp[0]] .= ','.$tmp[1];
+            else
+                $res[$tmp[0]] = $tmp[1];
+        }
+        $this->ips = $res;
+    }
+
+    public function manageConnection(Connection $connection, $i){
+
+        if($i == 0){
+            if($connection->isOpen())
+                $connection->close();
+            $this->setCurrentServer(0);
+            $connection->HOST = $this->current_server['ip'];
+            $connection->open();
+            //$connection->helo();
+            return $connection;
+        }
+
+
+        if(!$connection->isOpen()){
+            $this->setCurrentServer(0);
+            echo "befor rotate\n";
+            $next_server = rotate($i,$this->msg_vmta * count($this->current_server['vmta']),count($this->ips));
+            $this->setCurrentServer($next_server);
+            $connection->HOST = $this->current_server['ip'];
+            $connection->open();
+            //$connection->helo();
+            return $connection;
+        }
+
+        if($i % $this->msg_conn == 0){
+            if($connection->isOpen())
+                $connection->close();
+            $next_server = rotate($this->current_i_server+1,1,count($this->ips));
+            $this->setCurrentServer($next_server);
+            $connection->HOST = $this->current_server['ip'];
+            $connection->open();
+            //$connection->helo();
+            return $connection;
+        }
+
+        return $connection;
+    }
+
+    public function setCurrentServer($index){
+        $indx = array_keys($this->ips);
+        $id_server = $indx[$index];
+        $server = [];
+        $db = connect_to_db();
+        $query = "select `main_ip` from `servers` where `id`= {$id_server} ; ";
+        $result = $db->query($query) or die ("no query");
+        if ($result->num_rows <= 0) {
+            echo "0 results";
+        } else {
+            $server['ip'] = $result->fetch_row()[0];
+        }
+
+        $query = "select `vmta` from `ips` where `id` in ({$this->ips[$id_server]}) ; ";
+        if ($stmt = $db->prepare($query)) {
+
+            $stmt->execute();
+            $stmt->bind_result($vmta);
+
+            /* Lecture des valeurs */
+            while ($stmt->fetch()) {
+                $server['vmta'][] = $vmta;
+            }
+            $stmt->close();
+        }
+
+        $db->close();
+        $this->current_server = $server; // return
+        $this->current_i_server = $index; // return
+        $this->msg_conn = count($this->current_server['vmta'])*$this->msg_vmta;
     }
 
     /**
@@ -130,21 +225,22 @@ class Send {
     public function run()
     {
 
-//        $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
         $handle = fopen("data.csv", "r") or die("Couldn't open file (data)");
-        global $id_hundler;
+        global $id_hundler, $fraction;
         $id = 0; //$id_hundler = $id;
-        $connection = new Connection('somsales.com',7543);
+        $connection = new Connection(7543);
 
         if ($handle) {
-            $connection->open(); //helo !!
-            $connection->helo();
-            while ($line = fgets($handle)) {
+//            $connection->open(); //helo !!
+//            $connection->helo();
+            while (($line = fgets($handle)) && ($id_hundler < $fraction)) {
 
                 if($id < $id_hundler){
                     $id++;
                     continue;
                 }
+                $connection = $this->manageConnection($connection,$id); // exception if resume sending !!
+
                 $elemt = explode("|",$line);
                 $email = $elemt[1];
 
@@ -152,16 +248,16 @@ class Send {
                 $tmp_mail->RCPT_TO = $email;
                 $tmp_mail->MAIL_FROM = $this->from;
 
-                $i = msg_vmta($id,$this->msg_vmta,$this->nbr_vmta);
-                $id_vmta = $this->ips[$i];
+                $i = msg_vmta($id,$this->msg_vmta,count($this->current_server['vmta']));
+                $vmta = $this->current_server['vmta'][$i];
 
-                $tmp_mail->prepare($this->vmta[$id_vmta], $this->subject, $this->message , $this->headers);
+                $tmp_mail->prepare($vmta, $this->subject, $this->message , $this->headers);
 
-                if($id % $this->msg_conn == 0 && $id != 0){
-                    $connection->close();
-                    $connection->open();
-                    $connection->helo();
-                }
+//                if($id % $this->msg_conn == 0 && $id != 0){
+//                    $connection->close();
+//                    $connection->open();
+//                    $connection->helo();
+//                }
 
                 $connection->send($tmp_mail) ;
                 $id++;$id_hundler++;
@@ -184,10 +280,20 @@ class Connection
     public $stream; //connection
     public $response = '';
 
-    function __construct($host,$port)
+    function __construct($port)
     {
+        $this->PORT = $port;
+    }
+
+    function Connection($host,$port){
         $this->HOST = $host;
         $this->PORT = $port;
+    }
+
+    public function isOpen(){
+        if($this->stream)
+            return true;
+        return false;
     }
 
     function open(){
@@ -229,11 +335,12 @@ class Connection
         $this->command(NEWLINE);
         $this->command($mail->DATA['body']);
         $this->command(".");
+        fgets($this->stream, 4096);
     }
 
 
     function close(){
-        //echo "from close -- ".NEWLINE;
+        echo "from close $this->HOST -- ".NEWLINE;
         if($this->stream == null){
             echo ' => connnnn == null';
             return false;
