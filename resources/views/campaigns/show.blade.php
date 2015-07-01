@@ -35,7 +35,8 @@
         </div>
         <div class="col-md-3">
             <label for="delay">X-delay</label>
-            <input type="number" name="delay" value="@if($params){{$params->delay}}@else{{500}}@endif" class="form-control" required>
+            <input type="text" id="delay" name="delay" value="@if($params){{$params->delay}}@endif" class="form-control" required>
+            <span class="help-block">Message/second</span>
         </div>
     </div>
 
@@ -93,10 +94,12 @@
 
 @section('js')
     <script src="{{ asset('/lib/selectize/js/selectize.min.js') }}"></script>
+    <script src="{{ asset('/lib/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
     <script type="text/javascript">
         $(function () {
             $('#select-vmta').selectize();
             $('#select-list').selectize();
+            $("#delay").inputmask({mask:"099999/99",oncomplete:function(){/*alert("ook: "+$(this).val())*/}});
 
         });
     </script>

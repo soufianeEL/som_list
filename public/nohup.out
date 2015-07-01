@@ -1,22 +1,33 @@
 
 from close 146.247.24.68 -- 
-3000 
+1000 
+from close  -- 
+ => connnnn == null0 
 from close 146.247.24.68 -- 
-from set_pausedbefor rotate 
-from close 146.247.24.69 -- 
+1000 
 from close 146.247.24.91 -- 
-from close 146.247.24.68 -- 
-3000 
-from close 146.247.24.68 -- 
-from close 146.247.24.69 -- 
-from set_pausedfrom close 146.247.24.68 -- 
-from close 146.247.24.69 -- 
-from set_pausedbefor rotate 
 from close 146.247.24.91 -- 
 3000 
-from close 146.247.24.68 -- 
-from set_pausedbefor rotate 
 from close 146.247.24.69 -- 
-from close 146.247.24.91 -- 
+from close 146.247.24.69 -- 
+3000 
+from close 146.247.24.69 -- 
+1000 
+from close 146.247.24.68 -- 
+1000 
+from close 146.247.24.68 -- 
+from close 146.247.24.68 -- 
 from close 146.247.24.68 -- 
 3000 
+from close 146.247.24.91 -- 
+from close 146.247.24.69 -- 
+from close 146.247.24.68 -- 
+from close 146.247.24.91 -- 
+from close 146.247.24.69 -- 
+from close 146.247.24.68 -- 
+from close 146.247.24.91 -- 
+from close 146.247.24.69 -- 
+3000 
+set_paused\nset_paused\nfrom close 146.247.24.68 -- 
+from close 146.247.24.69 -- 
+set_paused\n

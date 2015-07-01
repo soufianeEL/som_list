@@ -15,9 +15,11 @@ use App\Models\Server;
 use App\Models\Subject;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Redirect;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class CampaignController extends Controller {
@@ -34,11 +36,14 @@ class CampaignController extends Controller {
         'delay.between' => 'The Msg/Connexion must be between :min -> :max.',
     ];
 
-	public function index()
+	public function index(Request $request)
 	{
-        // to fix user problem later
-		//$campaigns= Campaign::with('lists')->with('ips')->get();
-		$campaigns= Campaign::with('lists')->get();
+
+//		$campaigns = Campaign::with('lists')->get();
+		$campaigns= Campaign::where('created_by',Auth::user()->id)->with('lists')->paginate(10);
+        if($request->ajax())
+            return view('campaigns.table', compact('campaigns'));
+
         return view('campaigns.index', compact('campaigns'));
 	}
 

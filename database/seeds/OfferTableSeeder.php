@@ -29,8 +29,11 @@ class OfferTableSeeder extends Seeder {
         );
 
 //        DB::table('offers')->insert($offers);
-        foreach ( $offers as $offer ){
-            \App\Models\Offer::create($offer);
+        for($i=1; $i<2;$i++){
+            foreach ( $offers as $offer ){
+                \App\Models\Offer::create($offer);
+            }
+
         }
     }
 

@@ -10,24 +10,24 @@ class ChildOfferTableSeeder extends Seeder {
     {
 
         for($j =1; $j < 6; $j++){
-            for($i =1; $i < 4; $i++){
+            for($i =1; $i < 3; $i++){
                 Subject::create([
-                    'name' => 'subject-'.$i ,
+                    'name' => 'subject-'.$i*$j ,
                     'offer_id' => $j
                 ]);
             }
 
-            for($i =1; $i < 4; $i++){
+            for($i =1; $i < 3; $i++){
                 Creative::create([
-                    'name' => 'creative '.$i ,
+                    'name' => 'creative '.$i*$j ,
                     'unique_link' => 'www.crea-'.$i.'.jpg' ,
                     'offer_id' => $j
                 ]);
             }
 
-            for($i =1; $i < 4; $i++){
+            for($i =1; $i < 3; $i++){
                 FromLine::create([
-                    'from' => 'from '.$i ,
+                    'from' => 'from '.$i*$j ,
                     'offer_id' => $j
                 ]);
             }
