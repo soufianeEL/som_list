@@ -14,6 +14,7 @@
                 <td>Name</td>
                 <td>Code</td>
                 <td>Link</td>
+                <td>Status</td>
                 <td>Offers</td>
                 <td>Actions</td>
             </tr>
@@ -26,6 +27,14 @@
                     <td>{{ $aff->name }}</td>
                     <td>{{ $aff->code }}</td>
                     <td>{{ $aff->link }}</td>
+                    <td> @if( $aff->status == 'active' )
+                            <span class="glyphicon glyphicon-ok" style="color: green"></span>
+                        @elseif($aff->status == 'inactive')
+                            <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                        @else
+                             {{$aff->status}}
+                        @endif
+                    </td>
                     <td>offers (lien ici) </td>
 
                     <!-- we will also add show, edit, and delete buttons -->

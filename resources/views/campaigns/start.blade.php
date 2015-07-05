@@ -6,9 +6,11 @@
 
 @section('content')
 
-    {!! Form::open(['route' => ['campaigns.store']]) !!}
-    {!! Form::hidden('prepared_offer_id',$var['prepared_offre']) !!}
-
+    {!! Form::model($campaign,['route' => ['campaigns.store']]) !!}
+    {!! Form::hidden('offer_id') !!}
+    {!! Form::hidden('subject_id') !!}
+    {!! Form::hidden('creative_id') !!}
+    {!! Form::hidden('from_line_id') !!}
     <div class="row">
         <div class="col-md-6">
             <label for="select-vmta">Ips :</label>

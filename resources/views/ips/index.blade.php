@@ -45,6 +45,7 @@
 
             </tbody>
         </table>
+        {!! $ips->render() !!}
     @endif
 
 @endsection

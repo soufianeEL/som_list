@@ -15,7 +15,8 @@
                 <td>Description</td>
                 <td>Code</td>
                 <td>Vertical</td>
-                <td>reffered affiliate</td>
+                <td>Active</td>
+                <td>affiliate</td>
                 <td>Actions</td>
             </tr>
             </thead>
@@ -23,11 +24,17 @@
 
             @foreach($offers as $offer)
                 <tr>
-                    <td><a class="el-icon-th-large bs_ttip" title="Prepare It" onclick="Modal($(this));" data-href="{{ URL::to('offers/'.$offer->id.'/prepare/') }}"></a></td>
+                    <td><a class="el-icon-cog bs_ttip" title="Prepare It" onclick="Modal($(this));" data-href="{{ URL::to('offers/'.$offer->id.'/prepare/') }}"></a></td>
                     <td>{{ $offer->name }}</td>
                     <td>{{ $offer->description }}</td>
                     <td>{{ $offer->code }}</td>
                     <td>{{ $offer->vertical }}</td>
+                    <td> @if( $offer->active == 1 )
+                            <span class="glyphicon glyphicon-ok" style="color: green"></span>
+                        @else
+                            <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                        @endif
+                    </td>
                     <td><a class="btn" href="{{ URL::to('affiliates/' . $offer->affiliate_id ) }}">Go</a></td>
 
                     <td>

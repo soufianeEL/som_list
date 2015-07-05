@@ -30,12 +30,12 @@
     <div id="page_wrapper">
         <!-- header -->
         <header id="main_header">
-            @include('_main_header')
+            @include('_header')
         </header>
         <!-- breadcrumbs -->
         <nav id="breadcrumbs">
             <ul>
-                <li><a href="dashboard.html">Home</a></li>
+                <li><a href="/">Home</a></li>
             </ul>
         </nav>
         <!-- main content -->
@@ -71,12 +71,11 @@
         </div>
 
         <!-- main menu -->
-        @include('_main_menu')
+        @include('_menu')
     </div>
 
     <!-- fastclick -->
     <script src="{{ asset('/js/fastclick.min.js') }}"></script>
-
     <!-- typeahead -->
     <script src="{{ asset('/lib/typeahead/typeahead.bundle.min.js') }}"></script>
     <!-- scrollbar -->
@@ -85,6 +84,21 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <!-- Yukon Admin functions -->
     <script src="{{ asset('/js/yukon_all.min.js') }}"></script>
+    <script type="text/javascript">
+        var action = '{{currentAction()}}';
+        var element = $("#"+action);
+        if(action == 'home'){
+            element.addClass('section_active');
+        }
+        else{
+            if( element.length ){ //if it exists
+                element.addClass('act_nav');
+                var parent = element.parent().parent().parent();
+                parent.addClass('section_active');
+            }
+        }
+
+    </script>
     @yield('js')
 </body>
 </html>

@@ -15,6 +15,7 @@
                 <td>Isp</td>
                 <td>Type</td>
                 <td>Description</td>
+                <td>active</td>
                 <td>add_date</td>
                 <td>created_by</td>
                 <td>Actions</td>
@@ -29,6 +30,12 @@
                     <td>{{ $list->isp }}</td>
                     <td>{{ $list->type }}</td>
                     <td>{{ $list->descreption }}</td>
+                    <td> @if( $list->active == 1 )
+                            <span class="glyphicon glyphicon-ok" style="color: green"></span>
+                        @else
+                            <span class="glyphicon glyphicon-remove" style="color: red"></span>
+                        @endif
+                    </td>
                     <td>{{ $list->add_date }}</td>
                     <td>{{ $list->created_by }}</td>
                     <!-- we will also add show, edit, and delete buttons -->

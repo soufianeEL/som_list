@@ -7,7 +7,6 @@
 @section('content')
 
     {!! Form::model($campaign, ['method' => 'PATCH', 'route' => ['campaigns.update', $campaign->id]]) !!}
-    {{--{!! Form::hidden('prepared_offer_id',$var['prepared_offre']) !!}--}}
 
     <div class="row">
         <div class="col-md-6">

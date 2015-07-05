@@ -1,15 +1,23 @@
 <?php namespace App\Models;
 
 use App\Commands\Process;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Subject;
 
 class Campaign extends BaseModel {
 
     protected $guarded = [];
 
-    public function prepared_offer()
+    public function scopeOfThisUser($query)
     {
-        return $this->belongsTo('App\Models\PreparedOffer');
+        return $query->where('created_by',Auth::user()->id);
+    }
+
+    /////////////////// relations //////////////////////
+    public function offer()
+    {
+        return $this->belongsTo('App\Models\Offer');
     }
 
     public function lists()
@@ -37,23 +45,9 @@ class Campaign extends BaseModel {
         return $this->hasOne('App\Models\Queue');
     }
 
-    ///////////////////
-    public function offer(){
-        return $this->prepared_offer->offer();
-    }
 
-    public function subject(){
-        return $this->prepared_offer->subject();
-    }
 
-    public function from(){
-        return $this->prepared_offer->from();
-    }
-
-    public function creative(){
-        return $this->prepared_offer->creative();
-    }
-
+    /////////////////// helpers //////////////////////
     public function lastMessage(){
         return $this->messages->last();
     }
@@ -63,47 +57,35 @@ class Campaign extends BaseModel {
         return $this->params->last();
     }
 
+    public function subject()
+    {
+        return Subject::find($this->subject_id);
+    }
+    public function from()
+    {
+        return FromLine::find($this->from_line_id);
+    }
+    public function creative()
+    {
+        return Creative::find($this->creative_id);
+    }
+
     public function send($fraction, $vmta, $from, $subject, $headers, $message, $msg_vmta, $delay){
-        $queue = $this->queue();
+        $queue = $this->queue;
         $payload = "$vmta|$from|$subject|$headers|$message|$msg_vmta|$delay|$fraction";
 
-        if($queue->first()){
-            $this->queue->payload = $payload;
-            $this->queue->after = 21;
-            $this->queue->save();
+        if($queue){
+            $queue->payload = $payload;
+            $queue->after = 21;
+            $queue->save();
         }
         else{
-            $queue->create([
+            $this->queue()->create([
                 'payload'       => $payload,
                 'after'         => 10,
             ]);
-            //die("after");
         }
     }
 
-    public  function pause_job(){
-        $queue = $this->queue()->first();
-        if($queue){
-            return Process::kill($queue->pid);
-        }
-        return false;
-    }
-
-    public  function resume_job(){
-        return 'ok from resume';
-    }
-
-//    public static function boot()
-//    {
-//        parent::boot();
-//        static::created(function($model)
-//        {
-//            die('created');
-//        });
-//        static::updated(function($model)
-//        {
-//            die('update');
-//        });
-//    }
 
 }

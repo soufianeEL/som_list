@@ -7,9 +7,16 @@
 @endsection
 
 @section('js')
+    <!-- datatable -->
+    <script src="{{ asset('/lib/DataTables/media/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('/lib/DataTables/extensions/FixedHeader/js/dataTables.fixedHeader.min.js') }}"></script>
+    <script src="{{ asset('/lib/DataTables/media/js/dataTables.bootstrap.js') }}"></script>
+
     <script type="text/javascript" >
         var nbr_interval = 0;
         $(document).ready(function() {
+            dtable();
+            //
             all_status();
             $(document).on('click', '.pagination a', function (e) {
                 getNext($(this).attr('href').split('page=')[1]);
@@ -17,9 +24,24 @@
             });
         });
 
+        function dtable(){
+            var a = $("#datatable").dataTable({
+                        paginate: false,
+                        info: false
+                    }),
+                    b = new $.fn.dataTable.FixedHeader(a, {
+                        offsetTop: 48
+                    });
+            b.fnUpdate();
+//            $(window).on("throttledresize", function(a) {
+//                b._fnUpdateClones(!0);
+//                b._fnUpdatePositions()
+//            });
+        }
+
         function all_status(){
             if(nbr_interval==0){
-                var id = setInterval(function(){ status(id) ;},3000);
+                var id = setInterval(function(){ status(id) ;},2000);
                 nbr_interval++;
             }
         }
@@ -30,6 +52,7 @@
             }).done(function (data) {
                 $('#main_wrapper').html(data);
                 location.hash = page;
+                dtable();
             }).fail(function () {
                 alert('next page could not be loaded.');
             });
@@ -41,14 +64,18 @@
                 url:  "campaigns/"+ a.data('id')+"/resume",
                 data: {_token: '{{csrf_token()}}' },
                 success: function (data) {
-                    alert('in progress');
-                    a.parent().html("in progress : " +
-                    "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-id='"+a.data('id')+"'></span>");
-                    all_status();
+                    if(data == 'false') {
+                        alert('probleme !!');
+                    }else{
+                        alert('resumed');
+                        icon_pause(a);
+                        all_status();
+                    }
+                },
+                error : function(resultat, statut, erreur){
+                    alert('job could not be resumed.');
                 }
             });
-
-
         }
 
         function pause(a){
@@ -57,12 +84,28 @@
                 url: "campaigns/"+ a.data('id')+"/pause",
                 data: {_token: '{{csrf_token()}}' },
                 success: function (data) {
-                    alert('paused');
-                    a.parent().html("paused : " +
-                    "<span class='el-icon-play bs_ttip' title='click to resume' onclick='resume($(this));' data-href='"+a.data('id')+"'></span>");
+                    if(data == 'false') {
+                        alert('probleme !!');
+                    }else{
+                        alert('paused');
+                        icon_play(a);
+                    }
+                },
+                error : function(resultat, statut, erreur){
+                    alert('job could not be paused.');
                 }
             });
 
+        }
+
+        function icon_pause(a){
+            return a.parent().html("in progress : " +
+            "<span class='el-icon-pause bs_ttip' title='click to pause' onclick='pause($(this));' data-id='"+a.data('id')+"'></span>");
+        }
+
+        function icon_play(a){
+            return a.parent().html("paused : " +
+            "<span class='el-icon-play bs_ttip' title='click to resume' onclick='resume($(this));' data-id='"+a.data('id')+"'></span>");
         }
 
         function status(id){
@@ -86,6 +129,9 @@
                                 $("span[data-id='"+n+"']").parent().text('sent');
                             });
                         }
+                    },
+                    error : function(resultat, statut, erreur){
+                        alert("connection problem !!, can't get status");
                     }
                 });
             }

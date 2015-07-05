@@ -1,6 +1,5 @@
 <?php namespace App\Models;
 
-use App\Commands\Nohup;
 use App\Commands\Process;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -17,20 +16,10 @@ class Queue extends Model {
     {
         parent::boot();
 
-        static::creating(function($model)
+        static::saving(function($model)
         {
-            $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->campaign_id}\" $model->return");
-            $model->pid = $process_id;
-            $model->status = 0;
-
-        });
-
-        static::updating(function($model)
-        {
-            $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->campaign_id}\" $model->return");
-            $model->pid = $process_id;
-            $model->status = 0;
-            //$model->after = $model->after + 22;
+            $model->attempts++;
+            self::process($model);
         });
     }
 
@@ -39,4 +28,20 @@ class Queue extends Model {
         return $this->belongsTo('App\Models\Campaign');
     }
 
+    public static function process($model)
+    {
+        $process_id = Process::run("send.php \"{$model->payload}\" \"{$model->campaign_id}\" $model->return");
+        $model->pid = $process_id;
+        $model->status = 0;
+    }
+
+    public function pause()
+    {
+        Process::kill($this->pid);
+    }
+
+    public function resume()
+    {
+        $this->save();
+    }
 }

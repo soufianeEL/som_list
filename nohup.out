@@ -1,0 +1,7 @@
+PHP Warning:  fopen(data.csv): failed to open stream: No such file or directory in /var/www/html/som_list/app/Commands/send.php on line 228
+Couldn't open file (data)PHP Warning:  fopen(data.csv): failed to open stream: No such file or directory in /var/www/html/som_list/app/Commands/send.php on line 228
+Couldn't open file (data)PHP Warning:  fopen(data.csv): failed to open stream: No such file or directory in /var/www/html/som_list/app/Commands/send.php on line 228
+Couldn't open file (data)PHP Warning:  fopen(data.csv): failed to open stream: No such file or directory in /var/www/html/som_list/app/Commands/send.php on line 228
+Couldn't open file (data)PHP Warning:  fopen(data.csv): failed to open stream: No such file or directory in /var/www/html/som_list/app/Commands/send.php on line 228
+Couldn't open file (data)PHP Warning:  fopen(data.csv): failed to open stream: No such file or directory in /var/www/html/som_list/app/Commands/send.php on line 228
+Couldn't open file (data)

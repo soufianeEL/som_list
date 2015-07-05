@@ -59,12 +59,12 @@ function rotate($counter, $step, $array_length){
     }
     return $result;
 }
-
+// to create 1 function for set_paused & set_sent
 function set_paused(){
     global $campaign_id, $id_hundler;
-    echo 'set_paused\n';
+    echo 'paused'.NEWLINE;
     if(!$id_hundler){
-        echo " no return << $campaign_id >> !!";
+        echo "can't return << $campaign_id >> !!".NEWLINE;
         return false;
     }
     $db = connect_to_db();
@@ -73,7 +73,7 @@ function set_paused(){
     $result = $db->query($query);
 
     if (!$result) {
-        echo "Update record failed: (" . $db->errno . ") " . $db->error;
+        echo "Update record failed: (" . $db->errno . ") " . $db->error .NEWLINE;
         return flase;
     }
     return true;
@@ -81,7 +81,7 @@ function set_paused(){
 
 function set_sent($campaign_id, $return){
     if(!$return){
-        echo " no return << campaign_id: $campaign_id >> !!";
+        echo "no return << campaign_id: $campaign_id >> !!".NEWLINE;
         return false;
     }
     $db = connect_to_db();
@@ -90,7 +90,7 @@ function set_sent($campaign_id, $return){
     $result = $db->query($query);
 
     if (!$result) {
-        echo "Update record failed: (" . $db->errno . ") " . $db->error;
+        echo "Update record failed: (" . $db->errno . ") " . $db->error .NEWLINE;
         return flase;
     }
     return true;
@@ -100,7 +100,7 @@ function connect_to_db() {
     $mysqli = new mysqli('127.0.0.1', 'root', '', 'som_list');
 
     if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: ( $mysqli->connect_errno ) $mysqli->connect_error";
+        echo "Failed to connect to MySQL: ( $mysqli->connect_errno ) $mysqli->connect_error".NEWLINE;
         return;
     }
 
@@ -162,7 +162,7 @@ class Send {
 
         if(!$connection->isOpen()){
             $this->setCurrentServer(0);
-            echo "befor rotate\n";
+            echo "rotate ";
             $next_server = rotate($i,$this->msg_vmta * count($this->current_server['vmta']),count($this->ips));
             $this->setCurrentServer($next_server);
             $connection->HOST = $this->current_server['ip'];
@@ -193,7 +193,7 @@ class Send {
         $query = "select `main_ip` from `servers` where `id`= {$id_server} ; ";
         $result = $db->query($query) or die ("no query");
         if ($result->num_rows <= 0) {
-            echo "0 results";
+            echo "0 results".NEWLINE;
         } else {
             $server['ip'] = $result->fetch_row()[0];
         }
@@ -265,7 +265,7 @@ class Send {
             fclose($handle);
             $connection->close();
         }
-        echo "{$id} \n";
+        echo "{$id}".NEWLINE;
         return $id_hundler;
     }
 
@@ -303,7 +303,7 @@ class Connection
         $this->stream = stream_socket_client($this->HOST . ":" . $this->PORT,
             $errno, $errstr, $this->timeout, STREAM_CLIENT_CONNECT, $this->socket_context);
         if (!$this->stream) {
-            echo "$errstr ($errno) <br/>\n";
+            echo "$errstr ($errno)".NEWLINE;
             return flase;
         }
         return true;
@@ -314,7 +314,7 @@ class Connection
     }
     function helo(){
         if($this->stream == null){
-            echo ' => conn == null';
+            echo "can't hello .. no connection".NEWLINE;
             return false;
         }
         //echo 'from helo';
@@ -324,7 +324,7 @@ class Connection
     function Send($mail){
         //echo "from send -- ";
         if($this->stream == null){
-            echo ' => conn == null';
+            echo "can't send .. no connection".NEWLINE;
             return false;
         }
         //$this->command("HELO sure.somsales.com");
@@ -340,11 +340,11 @@ class Connection
 
 
     function close(){
-        echo "from close $this->HOST -- ".NEWLINE;
         if($this->stream == null){
-            echo ' => connnnn == null';
+            echo "can't close .. no connection".NEWLINE;
             return false;
         }
+        echo "close $this->HOST -- ".NEWLINE;
         $this->command('QUIT');
         $this->response = stream_get_contents($this->stream);
         //echo 'res = '. $this->response;

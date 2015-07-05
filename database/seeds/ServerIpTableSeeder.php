@@ -34,6 +34,15 @@ class ServerIpTableSeeder extends Seeder {
 
         ]);
 
+        for($i =1; $i < 4; $i++){
+            $ip = new Ip();
+            $ip->domain = 'domain-'.$i;
+            $ip->ip = '0.0.'.$i.'.'.$i*2;
+            $ip->server_id = 4;
+            $ip->active=false;
+            $ip->save();
+        }
+
         Ip::create([
             'domain' => 'somsales.com',
             'ip' => '146.247.24.68',

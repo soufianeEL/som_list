@@ -16,7 +16,7 @@ class IpController extends Controller {
 
 	public function index()
 	{
-		$ips = Ip::all();
+		$ips = Ip::paginate(10);
         return view('ips.index',compact('ips'));
 	}
 

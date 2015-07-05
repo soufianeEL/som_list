@@ -18,7 +18,11 @@ class CreateCampaignsTable extends Migration {
             $table->string('name',50);
             $table->string('status',20); // to set to ENUM (sent, active, paused, draft)
             $table->string('type',20); // to set to ENUM (mixte)
-            $table->integer('prepared_offer_id')->unsigned();
+            $table->integer('offer_id')->unsigned();
+            $table->integer('subject_id')->unsigned();
+            $table->integer('creative_id')->unsigned();
+            $table->integer('from_line_id')->unsigned();
+            //$table->integer('prepared_offer_id')->unsigned();
             //id_liste
             //id_message
 
@@ -30,7 +34,7 @@ class CreateCampaignsTable extends Migration {
 		});
 
         Schema::table('campaigns', function(Blueprint $table) {
-            $table->foreign('prepared_offer_id')->references('id')->on('prepared_offers')
+            $table->foreign('offer_id')->references('id')->on('offers')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
         });

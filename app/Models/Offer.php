@@ -16,6 +16,11 @@ class Offer extends BaseModel {
     /**
      * One to Many relation
      */
+    public function campaigns() //  should be has_one ??
+    {
+        return $this->hasMany('App\Models\Campaign');
+    }
+
     public function subjects()
     {
         return $this->hasMany('App\Models\Subject');
@@ -29,9 +34,9 @@ class Offer extends BaseModel {
         return $this->hasMany('App\Models\Creative');
     }
 
-    public function prepared_offers()
-    {
-        return $this->hasMany('App\Models\PreparedOffer');
-    }
+//    public function prepared_offers()
+//    {
+//        return $this->hasMany('App\Models\PreparedOffer');
+//    }
 
 }

@@ -6,19 +6,9 @@ if (!isset($_SERVER['REQUEST_TIME_FLOAT'])) {
     $_SERVER['REQUEST_TIME_FLOAT'] = microtime(true);
 }
 
-$c = new Connection('somsales.com',7543);
-var_dump($c->isOpen());
-$c->open();
-var_dump($c->isOpen());
-$c->helo();
-echo fgets($c->stream,16);
-fseek($c->stream,16);
-echo fgets($c->stream,16);
-fseek($c->stream,16);
-echo fgets($c->stream);
-$c->close();
-var_dump($c->isOpen());
+echo posix_getpid();
 
+set_start();
 
 die('ook');
 
@@ -64,6 +54,10 @@ function msg_vmta($compteur, $msg_vmta, $nbr_vmta){
         $result = (int) ($tmp / $msg_vmta);
     }
     return $result;
+}
+
+function set_start(){
+    sleep(20);
 }
 
 function set_paused(){

@@ -1,16 +1,15 @@
 <?php namespace App\Http\Controllers;
 
-use App\Commands\Nohup;
+use App\Commands\Process;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Queue as Myqueue;
 
 use App\Models\AccountList;
 use App\Models\Campaign;
-use App\Models\Creative;
+use App\Models\Offer;
 use App\Models\FromLine;
 use App\Models\Ip;
-use App\Models\PreparedOffer;
 use App\Models\Server;
 use App\Models\Subject;
 
@@ -40,24 +39,16 @@ class CampaignController extends Controller {
 	{
 
 //		$campaigns = Campaign::with('lists')->get();
-		$campaigns= Campaign::where('created_by',Auth::user()->id)->with('lists')->paginate(10);
+		$campaigns= Campaign::OfThisUser()->with('lists')->paginate(10);
         if($request->ajax())
             return view('campaigns.table', compact('campaigns'));
 
         return view('campaigns.index', compact('campaigns'));
 	}
 
-    public function start(PreparedOffer $prepared_offer)
+    public function edit(Campaign $campaign)
     {
-        $var = $prepared_offer->info();
-        $select = $this->select_ips();
-        $lists = AccountList::all(['id','name']);
-        return view('campaigns.start', compact('var','select','lists'));
-    }
-
-    public function show(Campaign $campaign, PreparedOffer $prepared_offer)
-    {
-        $var = $prepared_offer->info();
+        $var = $this->info($campaign);
         $select = $this->select_ips();
         $lists = AccountList::all(['id','name']);
 
@@ -76,25 +67,49 @@ class CampaignController extends Controller {
         }
 
         return view('campaigns.show', compact('campaign','var','select','c_ips','c_lists','lists','params','message'));
+
     }
 
+    public function create()
+    {
+        $campaign = new Campaign(Input::all());
 
-	public function store(Request $request)
+        $var = $this->info($campaign);
+        $select = $this->select_ips();
+        $lists = AccountList::all(['id','name']);
+        return view('campaigns.start', compact('campaign','var','select','lists'));
+    }
+
+	public function store(Campaign $campaign, Request $request)
 	{
         $this->validate($request, $this->rules, $this->message);
-
         $campaign = $this->setCampaign();
         $campaign = $this->setCampaignRelations($campaign);
         $this->send($campaign);
         return Redirect::route('campaigns.index')->with('message','Campaign sent successfully');
 	}
 
+
+    public function update(Request $request, Campaign $campaign)
+    {
+
+        $this->validate($request, $this->rules, $this->message);
+
+        $campaign = $this->setCampaignRelations($campaign);
+        $this->send($campaign);
+        return Redirect::route('campaigns.index')->with('message','Campaign updated & sent successfully');
+    }
+
     public function setCampaign(){
 
         $campaign = new Campaign();
         $campaign->name = str_replace(' ','_',Input::get("offre")) . '__' . date('Y-m-d-h:i:s');
         $campaign->status = 'trashed';
-        $campaign->prepared_offer_id = Input::get("prepared_offer_id");
+
+        $campaign->offer_id = Input::get("offer_id");
+        $campaign->subject_id = Input::get("subject_id");
+        $campaign->creative_id = Input::get("creative_id");
+        $campaign->from_line_id = Input::get("from_line_id");
         $campaign->save();
         return $campaign;
     }
@@ -102,9 +117,9 @@ class CampaignController extends Controller {
     public function setCampaignRelations(Campaign $campaign){
 
         $ips = array_map(function($n){
-                $tmp = explode('-', $n);
-                return $tmp[1];
-            },Input::get("vmta"));
+            $tmp = explode('-', $n);
+            return $tmp[1];
+        },Input::get("vmta"));
 
         $campaign->ips()->sync($ips);
         $campaign->lists()->sync(Input::get("lists"));
@@ -124,19 +139,11 @@ class CampaignController extends Controller {
         return $campaign;
     }
 
-    public function update(Request $request, Campaign $campaign)
+    public function prepare($id)
     {
-
-        $this->validate($request, $this->rules, $this->message);
-
-        $campaign = $this->setCampaignRelations($campaign);
-        $this->send($campaign);
-        return Redirect::route('campaigns.index')->with('message','Campaign updated & sent successfully');
+        $offer = Offer::with(['subjects','from_lines','creatives'])->find($id,['id','name']);
+        return view('offers._prepare', compact('offer'));
     }
-
-    public function edit($id)
-	{
-	}
 
 	public function destroy($id)
 	{
@@ -171,6 +178,16 @@ class CampaignController extends Controller {
         return $select;
     }
 
+    public function info(Campaign $campaign){
+        $result = [];
+        $result['offre'] = $campaign->offer->name;
+        $result['subject'] = $campaign->subject()->name;
+        $result['from'] = $campaign->from()->from;
+        $result['creative'] = $campaign->creative()->name;
+
+        return $result;
+    }
+
     public function get_status(Campaign $campaign){
         return $campaign->status;
     }
@@ -184,15 +201,22 @@ class CampaignController extends Controller {
     }
 
     public function pause($id){
-        $campaign = Campaign::find($id);
-        if($campaign)
-            $campaign->pause_job();
+        $queue = Myqueue::where('campaign_id',$id)->where('pid','<>',0)->first();
+        if($queue){
+            //Process::kill($queue->pid);
+            $queue->pause();
+        }
+        else
+            echo 'false';
     }
 
     public function resume($id){
-        $campaign = Campaign::find($id);
-        if($campaign)
-            $campaign->resume_job();
+        $queue = Myqueue::where('campaign_id',$id)->where('pid',0)->first();
+        if($queue){
+            $queue->resume();
+        }
+        else
+            echo 'false';
     }
 
 }
